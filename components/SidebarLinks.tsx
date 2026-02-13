@@ -7,14 +7,20 @@ const items = [
 
 export default function SidebarLinks() {
   return (
-    <div className="rounded border bg-white">
-      <div className="bg-red-600 text-white px-3 py-2 font-semibold">
+    <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="bg-red-600 px-4 py-2 text-white font-semibold">
         গুরুত্বপূর্ণ লিংক
       </div>
-      <ul className="p-3 space-y-2 text-sm">
+
+      <ul className="divide-y text-sm">
         {items.map((t) => (
-          <li key={t} className="border-b pb-2 last:border-b-0 last:pb-0">
-            <a href="#" className="hover:text-sky-600">{t}</a>
+          <li key={t}>
+            <a
+              href="#"
+              className="block px-4 py-2 text-slate-800 hover:bg-slate-50 hover:text-sky-700"
+            >
+              {t}
+            </a>
           </li>
         ))}
       </ul>

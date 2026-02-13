@@ -1,34 +1,44 @@
-const notices = [
-  { date: "2026-02-13", title: "নোটিশ নমুনা ১" },
-  { date: "2026-02-10", title: "নোটিশ নমুনা ২" },
-  { date: "2026-02-02", title: "নোটিশ নমুনা ৩" },
-];
+import { notices } from "@/lib/notices";
+import Link from "next/link";
 
 export default function NoticeTable() {
   return (
-    <div className="rounded border bg-white">
-      <div className="bg-sky-600 text-white px-3 py-2 font-semibold">
-        নোটিশ
-      </div>
+    <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="bg-sky-700 px-4 py-2 text-white font-semibold">নোটিশ</div>
 
       <div className="overflow-x-auto">
-        <table className="min-w-[520px] w-full text-sm">
-          <thead className="bg-gray-50">
-            <tr>
-              <th className="text-left p-2 w-32">তারিখ</th>
-              <th className="text-left p-2">বিষয়</th>
-              <th className="text-left p-2 w-24">ডাউনলোড</th>
+        <table className="w-full text-sm">
+          <thead className="bg-slate-50 text-slate-700">
+            <tr className="border-b">
+              <th className="p-2 text-left w-28">তারিখ</th>
+              <th className="p-2 text-left">বিষয়</th>
+              <th className="p-2 text-left w-20 hidden sm:table-cell">ফাইল</th>
             </tr>
           </thead>
-          <tbody>
+
+          <tbody className="divide-y">
             {notices.map((n) => (
-              <tr key={n.title} className="border-t">
-                <td className="p-2">{n.date}</td>
-                <td className="p-2">{n.title}</td>
-                <td className="p-2">
-                  <button className="rounded bg-sky-600 px-2 py-1 text-white text-xs">
+              <tr key={n.id} className="hover:bg-slate-50">
+                <td className="p-2 whitespace-nowrap text-slate-700">{n.date}</td>
+
+                <td className="p-2 text-slate-800">
+                  <div className="flex items-center justify-between gap-2">
+                    <span className="leading-snug">{n.title}</span>
+
+                    {/* mobile badge */}
+                    <span className="sm:hidden inline-flex items-center rounded bg-sky-100 px-2 py-0.5 text-xs text-sky-700">
+                      PDF
+                    </span>
+                  </div>
+                </td>
+
+                <td className="p-2 hidden sm:table-cell">
+                  <a
+                    href={n.fileUrl ?? "#"}
+                    className="inline-flex items-center justify-center rounded bg-sky-600 px-2 py-1 text-xs text-white hover:bg-sky-700"
+                  >
                     PDF
-                  </button>
+                  </a>
                 </td>
               </tr>
             ))}
@@ -37,9 +47,12 @@ export default function NoticeTable() {
       </div>
 
       <div className="p-3">
-        <button className="w-full rounded bg-sky-600 py-2 text-white text-sm">
-          সব নোটিশ দেখুন
-        </button>
+<Link
+  href="/notices"
+  className="block w-full rounded-lg bg-sky-700 py-2 text-center text-sm font-semibold text-white hover:bg-sky-800"
+>
+  সব নোটিশ দেখুন
+</Link>
       </div>
     </div>
   );
