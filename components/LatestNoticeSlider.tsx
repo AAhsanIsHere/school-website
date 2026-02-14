@@ -1,6 +1,3 @@
-"use client";
-
-import { useEffect, useMemo, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 
@@ -15,97 +12,78 @@ function formatDateShort(iso: string) {
   });
 }
 
-export default function LatestNoticeSlider() {
-  const t = useTranslations("latestNotice");
+export default function NoticeTable() {
+  const t = useTranslations("noticeTable");
   const c = useTranslations("common");
 
-  const items = useMemo(() => {
-    return [...studentNotices].sort((a, b) => b.date.localeCompare(a.date));
-  }, []);
-
-  const [idx, setIdx] = useState(0);
-
-  const current: Notice | undefined = items.length
-    ? items[idx % items.length]
-    : undefined;
-
-  const prev = () =>
-    setIdx((v) =>
-      items.length ? (v - 1 + items.length) % items.length : 0
-    );
-  const next = () =>
-    setIdx((v) => (items.length ? (v + 1) % items.length : 0));
-
-  useEffect(() => {
-    if (items.length <= 1) return;
-    const timer = setInterval(() => {
-      setIdx((v) => (v + 1) % items.length);
-    }, 5000);
-    return () => clearInterval(timer);
-  }, [items.length]);
+  const rows: Notice[] = [...studentNotices]
+    .sort((a, b) => b.date.localeCompare(a.date))
+    .slice(0, 6);
 
   return (
-    <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
-      <div className="flex items-center">
-        {/* Left blue label */}
-        <div className="bg-sky-600 px-4 py-2 text-sm font-semibold text-white whitespace-nowrap">
-          {t("label")}
+    <div className="rounded-xl bg-[color:var(--surface)] shadow-sm ring-1 ring-black/5 overflow-hidden">
+      {/* Title */}
+      <div className="px-3 pt-3">
+        <div className="flex items-center gap-2">
+          <span className="h-4 w-[3px] bg-sky-600" />
+          <h2 className="text-lg font-semibold">{t("title")}</h2>
         </div>
+      </div>
 
-        {/* Middle text */}
-        <div className="flex-1 px-4 py-2 text-sm min-w-0">
-          {current ? (
-            <div className="flex items-center gap-3 min-w-0">
-              <span className="text-xs text-slate-600 whitespace-nowrap">
-                {formatDateShort(current.date)}
-              </span>
+      <div className="mt-3 overflow-x-auto">
+        <table className="w-full text-sm">
+          <thead className="bg-sky-600 text-white">
+            <tr>
+              <th className="p-2 text-center w-12">{t("th.sl")}</th>
+              <th className="p-2 text-left w-28">{t("th.date")}</th>
+              <th className="p-2 text-left">{t("th.title")}</th>
+              <th className="p-2 text-center w-24">{t("th.download")}</th>
+            </tr>
+          </thead>
 
-              {current.fileUrl ? (
-                <a
-                  href={current.fileUrl}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="truncate hover:underline"
-                  title={current.title}
-                >
-                  {current.title}
-                </a>
-              ) : (
-                <Link
-                  href="/notices"
-                  className="truncate hover:underline"
-                  title={current.title}
-                >
-                  {current.title}
-                </Link>
-              )}
-            </div>
-          ) : (
-            <span className="text-slate-500">{c("emptyNotices")}</span>
-          )}
-        </div>
+          <tbody className="divide-y divide-black/10">
+            {rows.map((n, i) => (
+              <tr key={n.id} className="hover:bg-black/5">
+                <td className="p-2 text-center">{i + 1}</td>
+                <td className="p-2 whitespace-nowrap">{formatDateShort(n.date)}</td>
+                <td className="p-2">{n.title}</td>
 
-        {/* Right arrows */}
-        <div className="flex items-center gap-1 px-2">
-          <button
-            type="button"
-            onClick={prev}
-            className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
-            aria-label={t("prev")}
-            title={t("prev")}
-          >
-            ‹
-          </button>
-          <button
-            type="button"
-            onClick={next}
-            className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
-            aria-label={t("next")}
-            title={t("next")}
-          >
-            ›
-          </button>
-        </div>
+                <td className="p-2 text-center">
+                  {n.fileUrl ? (
+                    <a
+                      href={n.fileUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+                    >
+                      {c("pdf")}
+                    </a>
+                  ) : (
+                    <span className="text-xs opacity-60">{c("na")}</span>
+                  )}
+                </td>
+              </tr>
+            ))}
+
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan={4} className="p-6 text-center opacity-70">
+                  {c("empty")}
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
+
+      {/* Bottom button */}
+      <div className="p-4 flex justify-center">
+        <Link
+          href="/notices"
+          className="rounded bg-sky-600 px-8 py-2 text-sm font-semibold text-white hover:bg-sky-700"
+        >
+          {t("allBtn")}
+        </Link>
       </div>
     </div>
   );

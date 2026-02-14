@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
+/* ---------- LIGHT MODE (default) ---------- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg-main: #f1f5f9; /* light grey background */
+  --bg-card: #ffffff; /* white cards */
+  --text-main: #0f172a; /* slate-900 */
+  --text-muted: #475569; /* slate-600 */
+  --border: #e5e7eb; /* gray-200 */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
+/* ---------- DARK MODE (browser preference) ---------- */
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --bg-main: #1f2933; /* dark grey (not black) */
+    --bg-card: #27323f; /* card grey */
+    --text-main: #e5e7eb; /* light text */
+    --text-muted: #9ca3af; /* muted grey */
+    --border: #374151; /* gray-700 */
+  }
+
+  /* Google Map dark look */
+  .map-embed {
+    filter: invert(0.92) hue-rotate(180deg) contrast(0.92) brightness(0.85);
   }
 }
 
+/* ---------- GLOBAL STYLES ---------- */
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  height: 100%;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+}
+
+/* Optional: make common card-like areas look correct in dark mode */
+.card-like {
+  background: var(--bg-card);
+  border-color: var(--border);
 }

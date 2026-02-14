@@ -1,4 +1,6 @@
 // app/[locale]/layout.tsx
+import "../globals.css";
+
 import { NextIntlClientProvider } from "next-intl";
 import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -17,28 +19,26 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }> | { locale: string };
 }) {
   const { locale } = await Promise.resolve(params);
-
   if (!routing.locales.includes(locale as any)) notFound();
 
   setRequestLocale(locale);
   const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale} messages={messages}>
-      {/* full viewport height */}
-      <div className="min-h-screen bg-slate-100 p-3 sm:p-6 flex flex-col">
-        {/* stretch the "site card" to full height */}
-        <div className="mx-auto w-full max-w-5xl flex-1 flex flex-col bg-white shadow-md overflow-hidden md:rounded-none sm:rounded-2xl">
-          <TopBar />
-          <SiteHeader />
-          <Navbar />
+    <html lang={locale} suppressHydrationWarning>
+      <body className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)]">
+        <NextIntlClientProvider locale={locale} messages={messages}>
+          <div className="mx-auto w-full max-w-5xl min-h-screen flex flex-col bg-[var(--bg-card)] shadow-md">
+            <TopBar />
+            <SiteHeader />
+            <Navbar />
 
-          {/* this grows and pushes footer down */}
-          <div className="flex-1">{children}</div>
+            <div className="flex-1">{children}</div>
 
-          <Footer />
-        </div>
-      </div>
-    </NextIntlClientProvider>
+            <Footer />
+          </div>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

@@ -21,8 +21,8 @@ export default function NoticeTable() {
     .slice(0, 6);
 
   return (
-    <div className="rounded-xl bg-white shadow-sm ring-1 ring-black/5 overflow-hidden">
-      {/* Title like screenshot */}
+    <div className="rounded-xl bg-[color:var(--bg-card)] text-[color:var(--text-main)] shadow-sm ring-1 ring-black/5 overflow-hidden">
+      {/* Title */}
       <div className="px-3 pt-3">
         <div className="flex items-center gap-2">
           <span className="h-4 w-[3px] bg-sky-600" />
@@ -41,14 +41,20 @@ export default function NoticeTable() {
             </tr>
           </thead>
 
-          <tbody className="divide-y">
+          <tbody className="divide-y divide-[color:var(--border)]">
             {rows.map((n, i) => (
-              <tr key={n.id} className="hover:bg-slate-50">
+              <tr
+                key={n.id}
+                className="hover:bg-[color:var(--border)]/40 transition-colors"
+              >
                 <td className="p-2 text-center">{i + 1}</td>
-                <td className="p-2 whitespace-nowrap">
+
+                <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
                   {formatDateShort(n.date)}
                 </td>
+
                 <td className="p-2">{n.title}</td>
+
                 <td className="p-2 text-center">
                   {n.fileUrl ? (
                     <a
@@ -60,7 +66,9 @@ export default function NoticeTable() {
                       {c("pdf")}
                     </a>
                   ) : (
-                    <span className="text-xs text-slate-400">{c("na")}</span>
+                    <span className="text-xs text-[color:var(--text-muted)]">
+                      {c("na")}
+                    </span>
                   )}
                 </td>
               </tr>
@@ -68,7 +76,10 @@ export default function NoticeTable() {
 
             {rows.length === 0 && (
               <tr>
-                <td colSpan={4} className="p-6 text-center text-slate-600">
+                <td
+                  colSpan={4}
+                  className="p-6 text-center text-[color:var(--text-muted)]"
+                >
                   {c("empty")}
                 </td>
               </tr>
@@ -77,7 +88,7 @@ export default function NoticeTable() {
         </table>
       </div>
 
-      {/* Bottom button like screenshot */}
+      {/* Bottom button */}
       <div className="p-4 flex justify-center">
         <Link
           href="/notices"

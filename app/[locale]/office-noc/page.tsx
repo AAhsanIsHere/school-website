@@ -26,11 +26,11 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
         type="button"
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
-        className={`rounded px-2 py-1 text-sm ${
-          disabled
-            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-            : "bg-slate-100 hover:bg-slate-200"
-        }`}
+        className={[
+          "rounded px-2 py-1 text-sm border",
+          "bg-[color:var(--bg-main)] text-[color:var(--text-main)] border-[color:var(--border)]",
+          disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-[color:var(--border)]",
+        ].join(" ")}
         aria-expanded={open}
         aria-haspopup="menu"
       >
@@ -47,14 +47,14 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
           />
 
           <div
-            className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10"
+            className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg border bg-[color:var(--bg-card)] shadow-lg border-[color:var(--border)]"
             role="menu"
           >
             <a
               href={fileUrl}
               target="_blank"
               rel="noreferrer"
-              className="block px-3 py-2 text-sm hover:bg-slate-50"
+              className="block px-3 py-2 text-sm text-[color:var(--text-main)] hover:bg-[color:var(--bg-main)]"
               role="menuitem"
               onClick={() => setOpen(false)}
             >
@@ -77,25 +77,25 @@ export default function OfficeNocPage() {
   );
 
   return (
-    <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 bg-[color:var(--bg-main)] text-[color:var(--text-main)]">
       <div className="py-4">
         <h1 className="text-2xl sm:text-3xl font-semibold">{t("title")}</h1>
       </div>
 
-      <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="overflow-hidden rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">
         <div className="bg-sky-600 px-4 py-2 text-white font-semibold">
           {t("listTitle")}
         </div>
 
         {/* Mobile */}
-        <div className="sm:hidden divide-y">
+        <div className="sm:hidden divide-y divide-[color:var(--border)]">
           {sorted.map((n: Notice, idx: number) => (
             <div key={n.id} className="flex items-start justify-between gap-3 p-3">
               <div className="min-w-0">
-                <div className="text-xs text-slate-600">
+                <div className="text-xs text-[color:var(--text-muted)]">
                   {idx + 1}. {formatDateShort(n.date)}
                 </div>
-                <div className="mt-1 font-medium text-slate-900 leading-snug">
+                <div className="mt-1 font-medium leading-snug text-[color:var(--text-main)]">
                   {n.title}
                 </div>
               </div>
@@ -104,7 +104,7 @@ export default function OfficeNocPage() {
           ))}
 
           {sorted.length === 0 && (
-            <div className="p-6 text-center text-slate-600">
+            <div className="p-6 text-center text-[color:var(--text-muted)]">
               {t("empty")}
             </div>
           )}
@@ -113,8 +113,8 @@ export default function OfficeNocPage() {
         {/* Desktop */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-700">
-              <tr className="border-b">
+            <thead className="bg-[color:var(--bg-main)] text-[color:var(--text-muted)]">
+              <tr className="border-b border-[color:var(--border)]">
                 <th className="p-2 text-center w-16">{t("th.sl")}</th>
                 <th className="p-2 text-left w-28">{t("th.date")}</th>
                 <th className="p-2 text-left min-w-[240px]">{t("th.title")}</th>
@@ -122,16 +122,18 @@ export default function OfficeNocPage() {
               </tr>
             </thead>
 
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-[color:var(--border)]">
               {sorted.map((n: Notice, idx: number) => (
-                <tr key={n.id} className="hover:bg-slate-50">
-                  <td className="p-2 text-center text-slate-700">{idx + 1}</td>
+                <tr key={n.id} className="hover:bg-[color:var(--bg-main)]">
+                  <td className="p-2 text-center text-[color:var(--text-muted)]">
+                    {idx + 1}
+                  </td>
 
-                  <td className="p-2 text-slate-700 whitespace-nowrap">
+                  <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
                     {formatDateShort(n.date)}
                   </td>
 
-                  <td className="p-2 text-slate-900">{n.title}</td>
+                  <td className="p-2 text-[color:var(--text-main)]">{n.title}</td>
 
                   <td className="p-2 text-center">
                     {n.fileUrl ? (
@@ -144,7 +146,9 @@ export default function OfficeNocPage() {
                         {c("pdf")}
                       </a>
                     ) : (
-                      <span className="text-xs text-slate-400">{c("na")}</span>
+                      <span className="text-xs text-[color:var(--text-muted)]">
+                        {c("na")}
+                      </span>
                     )}
                   </td>
                 </tr>
@@ -152,7 +156,7 @@ export default function OfficeNocPage() {
 
               {sorted.length === 0 && (
                 <tr>
-                  <td className="p-6 text-center text-slate-600" colSpan={4}>
+                  <td className="p-6 text-center text-[color:var(--text-muted)]" colSpan={4}>
                     {t("empty")}
                   </td>
                 </tr>
@@ -163,7 +167,7 @@ export default function OfficeNocPage() {
       </div>
 
       <div className="mt-4">
-        <Link className="text-sm text-sky-700 hover:underline" href="/">
+        <Link className="text-sm text-sky-600 hover:underline" href="/">
           {c("backHome")}
         </Link>
       </div>

@@ -6,7 +6,7 @@ export default function SiteHeader() {
   const t = useTranslations("siteHeader");
 
   return (
-    <header className="bg-white">
+    <header className="bg-[color:var(--bg-card)] text-[color:var(--text-main)]">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-12 items-center gap-2">
           {/* Left logo (click to home) */}
@@ -28,10 +28,10 @@ export default function SiteHeader() {
 
           {/* Title */}
           <div className="col-span-6 sm:col-span-8 text-center">
-            <h1 className="text-lg sm:text-2xl font-semibold leading-snug">
+            <h1 className="text-lg sm:text-2xl font-semibold leading-snug text-[color:var(--text-main)]">
               {t("title")}
             </h1>
-            <p className="mt-1 text-xs sm:text-sm text-gray-600">
+            <p className="mt-1 text-xs sm:text-sm text-[color:var(--text-muted)]">
               {t("subtitle")}
             </p>
           </div>
@@ -39,7 +39,7 @@ export default function SiteHeader() {
           {/* Right logo */}
           <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
             <div className="relative h-12 w-12 sm:h-14 sm:w-14">
-              <div className="h-full w-full rounded bg-gray-100" />
+              <div className="h-full w-full rounded bg-[color:var(--border)]/35" />
               {/* Later replace with:
               <Image src="/logo-right.png" alt={t("rightLogoAlt")} fill className="object-contain" />
               */}

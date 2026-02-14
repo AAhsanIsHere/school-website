@@ -13,8 +13,8 @@ function PersonCard({
   img: string;
 }) {
   return (
-    <div className="rounded-xl bg-white shadow-sm ring-1 ring-black/5 p-4 text-center">
-      <div className="mx-auto h-28 w-28 overflow-hidden rounded bg-slate-100">
+    <div className="rounded-xl border p-4 text-center shadow-sm bg-[color:var(--bg-card)] border-[color:var(--border)]">
+      <div className="mx-auto h-28 w-28 overflow-hidden rounded bg-[color:var(--bg-main)] border border-[color:var(--border)]">
         <Image
           src={img}
           alt={name}
@@ -24,8 +24,10 @@ function PersonCard({
         />
       </div>
 
-      <div className="mt-3 text-sm font-semibold">{name}</div>
-      <div className="text-xs text-slate-600">{title}</div>
+      <div className="mt-3 text-sm font-semibold text-[color:var(--text-main)]">
+        {name}
+      </div>
+      <div className="text-xs text-[color:var(--text-muted)]">{title}</div>
     </div>
   );
 }
@@ -34,9 +36,11 @@ export default function StaffsPage() {
   const t = useTranslations("staffsPage");
 
   return (
-    <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 bg-[color:var(--bg-main)] text-[color:var(--text-main)]">
       <section className="mx-auto max-w-5xl">
-        <h1 className="mb-6 text-2xl font-semibold sm:text-3xl">{t("title")}</h1>
+        <h1 className="mb-6 text-2xl font-semibold sm:text-3xl text-[color:var(--text-main)]">
+          {t("title")}
+        </h1>
 
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
           {staffIds.map((n) => (

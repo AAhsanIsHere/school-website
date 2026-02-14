@@ -31,7 +31,6 @@ export default function Navbar() {
       if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setDropdownOpen(false);
       }
-
       if (noticeDropdownRef.current && !noticeDropdownRef.current.contains(target)) {
         setNoticeDropdownOpen(false);
       }
@@ -41,15 +40,21 @@ export default function Navbar() {
     return () => document.removeEventListener("mousedown", onDocClick);
   }, []);
 
+  const navBg = "bg-[color:var(--bg-card)]";
+  const textMain = "text-[color:var(--text-main)]";
+  const borderCol = "border-[color:var(--border)]";
+  const hoverBg = "hover:bg-[color:var(--border)]";
+  const hoverText = "hover:text-sky-600";
+
   return (
-    <nav className="bg-white shadow-sm relative z-30">
+    <nav className={`${navBg} ${textMain} border-b ${borderCol} relative z-30`}>
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
-        {/* ✅ show only on mobile */}
+        {/* mobile label */}
         <div className="font-semibold md:hidden">{t("nav.menu")}</div>
 
         {/* Mobile toggle */}
         <button
-          className="md:hidden rounded border px-3 py-1 text-sm"
+          className={`md:hidden rounded border ${borderCol} px-3 py-1 text-sm ${hoverBg}`}
           onClick={() => {
             setOpen((v) => !v);
             setStaffMenuOpen(false);
@@ -64,7 +69,7 @@ export default function Navbar() {
         {/* Desktop menu */}
         <ul className="hidden md:flex items-center gap-5 text-sm">
           <li>
-            <Link className="hover:text-sky-700" href="/">
+            <Link className={hoverText} href="/">
               {t("nav.home")}
             </Link>
           </li>
@@ -73,7 +78,7 @@ export default function Navbar() {
           <li className="relative" ref={noticeDropdownRef}>
             <button
               type="button"
-              className="hover:text-sky-700 inline-flex items-center gap-1"
+              className={`${hoverText} inline-flex items-center gap-1`}
               aria-haspopup="menu"
               aria-expanded={noticeDropdownOpen}
               onClick={() => {
@@ -85,16 +90,18 @@ export default function Navbar() {
             </button>
 
             {noticeDropdownOpen && (
-              <div className="absolute left-0 top-full z-40 mt-2 w-52 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
+              <div
+                className={`absolute left-0 top-full z-40 mt-2 w-52 overflow-hidden rounded-lg ${navBg} shadow-lg ring-1 ring-black/10`}
+              >
                 <Link
-                  className="block px-3 py-2 text-sm hover:bg-slate-50"
+                  className={`block px-3 py-2 text-sm ${hoverBg}`}
                   href="/notices"
                   onClick={() => setNoticeDropdownOpen(false)}
                 >
                   {t("nav.notice_students")}
                 </Link>
                 <Link
-                  className="block px-3 py-2 text-sm hover:bg-slate-50"
+                  className={`block px-3 py-2 text-sm ${hoverBg}`}
                   href="/office-noc"
                   onClick={() => setNoticeDropdownOpen(false)}
                 >
@@ -109,7 +116,7 @@ export default function Navbar() {
             .filter((l) => l.href !== "/")
             .map((l) => (
               <li key={l.href}>
-                <Link className="hover:text-sky-700" href={l.href}>
+                <Link className={hoverText} href={l.href}>
                   {l.label}
                 </Link>
               </li>
@@ -119,7 +126,7 @@ export default function Navbar() {
           <li className="relative" ref={dropdownRef}>
             <button
               type="button"
-              className="hover:text-sky-700 inline-flex items-center gap-1"
+              className={`${hoverText} inline-flex items-center gap-1`}
               aria-haspopup="menu"
               aria-expanded={dropdownOpen}
               onClick={() => {
@@ -131,24 +138,25 @@ export default function Navbar() {
             </button>
 
             {dropdownOpen && (
-              /* ✅ changed left-0 -> right-0 so it won’t clip on the right edge */
-              <div className="absolute right-0 top-full z-40 mt-2 w-44 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
+              <div
+                className={`absolute right-0 top-full z-40 mt-2 w-44 overflow-hidden rounded-lg ${navBg} shadow-lg ring-1 ring-black/10`}
+              >
                 <Link
-                  className="block px-3 py-2 text-sm hover:bg-slate-50"
+                  className={`block px-3 py-2 text-sm ${hoverBg}`}
                   href="/principal"
                   onClick={() => setDropdownOpen(false)}
                 >
                   {t("nav.principal")}
                 </Link>
                 <Link
-                  className="block px-3 py-2 text-sm hover:bg-slate-50"
+                  className={`block px-3 py-2 text-sm ${hoverBg}`}
                   href="/teachers"
                   onClick={() => setDropdownOpen(false)}
                 >
                   {t("nav.teachers")}
                 </Link>
                 <Link
-                  className="block px-3 py-2 text-sm hover:bg-slate-50"
+                  className={`block px-3 py-2 text-sm ${hoverBg}`}
                   href="/staffs"
                   onClick={() => setDropdownOpen(false)}
                 >
@@ -162,9 +170,9 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden bg-white">
+        <div className={`${navBg} md:hidden border-t ${borderCol}`}>
           <div className="mx-auto max-w-5xl px-4 py-2 text-sm flex flex-col gap-2">
-            <Link className="py-1 hover:text-sky-700" href="/" onClick={() => setOpen(false)}>
+            <Link className={hoverText} href="/" onClick={() => setOpen(false)}>
               {t("nav.home")}
             </Link>
 
@@ -173,7 +181,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setNoticeMenuOpen((v) => !v)}
-                className="w-full flex items-center justify-between py-1 font-normal"
+                className={`w-full flex items-center justify-between py-1 font-normal ${hoverText}`}
                 aria-expanded={noticeMenuOpen}
               >
                 <span>{t("nav.notice")}</span>
@@ -182,10 +190,10 @@ export default function Navbar() {
 
               {noticeMenuOpen && (
                 <div className="mt-1 pl-3 flex flex-col gap-1">
-                  <Link className="block py-1 hover:text-sky-700" href="/notices" onClick={() => setOpen(false)}>
+                  <Link className={hoverText} href="/notices" onClick={() => setOpen(false)}>
                     {t("nav.notice_students")}
                   </Link>
-                  <Link className="block py-1 hover:text-sky-700" href="/office-noc" onClick={() => setOpen(false)}>
+                  <Link className={hoverText} href="/office-noc" onClick={() => setOpen(false)}>
                     {t("nav.notice_office")}
                   </Link>
                 </div>
@@ -197,7 +205,7 @@ export default function Navbar() {
               .map((l) => (
                 <Link
                   key={l.href}
-                  className="py-1 hover:text-sky-700"
+                  className={hoverText}
                   href={l.href}
                   onClick={() => setOpen(false)}
                 >
@@ -210,7 +218,7 @@ export default function Navbar() {
               <button
                 type="button"
                 onClick={() => setStaffMenuOpen((v) => !v)}
-                className="w-full flex items-center justify-between py-1 font-normal"
+                className={`w-full flex items-center justify-between py-1 font-normal ${hoverText}`}
                 aria-expanded={staffMenuOpen}
               >
                 <span>{t("nav.staff")}</span>
@@ -219,13 +227,13 @@ export default function Navbar() {
 
               {staffMenuOpen && (
                 <div className="mt-1 pl-3 flex flex-col gap-1">
-                  <Link className="block py-1 hover:text-sky-700" href="/principal" onClick={() => setOpen(false)}>
+                  <Link className={hoverText} href="/principal" onClick={() => setOpen(false)}>
                     {t("nav.principal")}
                   </Link>
-                  <Link className="block py-1 hover:text-sky-700" href="/teachers" onClick={() => setOpen(false)}>
+                  <Link className={hoverText} href="/teachers" onClick={() => setOpen(false)}>
                     {t("nav.teachers")}
                   </Link>
-                  <Link className="block py-1 hover:text-sky-700" href="/staffs" onClick={() => setOpen(false)}>
+                  <Link className={hoverText} href="/staffs" onClick={() => setOpen(false)}>
                     {t("nav.staffs")}
                   </Link>
                 </div>

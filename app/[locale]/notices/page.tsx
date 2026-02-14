@@ -9,11 +9,11 @@ import { studentNotices as allNotices, type Notice } from "@/lib/notices";
 const preferredOrderBn = ["পরীক্ষা", "ছুটি", "ক্লাস নোটিশ", "সাধারণ", "অন্যান্য"] as const;
 
 const categoryMap: Record<string, "exam" | "holiday" | "class" | "general" | "other"> = {
-  "পরীক্ষা": "exam",
-  "ছুটি": "holiday",
+  পরীক্ষা: "exam",
+  ছুটি: "holiday",
   "ক্লাস নোটিশ": "class",
-  "সাধারণ": "general",
-  "অন্যান্য": "other",
+  সাধারণ: "general",
+  অন্যান্য: "other",
 };
 
 function categoryKey(bn: string) {
@@ -25,13 +25,7 @@ function formatDateShort(iso: string) {
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "2-digit" });
 }
 
-function RowMenu({
-  fileUrl,
-  downloadLabel,
-}: {
-  fileUrl?: string;
-  downloadLabel: string;
-}) {
+function RowMenu({ fileUrl, downloadLabel }: { fileUrl?: string; downloadLabel: string }) {
   const [open, setOpen] = useState(false);
   const disabled = !fileUrl;
 
@@ -41,11 +35,11 @@ function RowMenu({
         type="button"
         disabled={disabled}
         onClick={() => setOpen((v) => !v)}
-        className={`rounded px-2 py-1 text-sm ${
-          disabled
-            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
-            : "bg-slate-100 hover:bg-slate-200"
-        }`}
+        className={[
+          "rounded px-2 py-1 text-sm border",
+          "bg-[color:var(--bg-main)] text-[color:var(--text-main)] border-[color:var(--border)]",
+          disabled ? "opacity-50 cursor-not-allowed" : "hover:bg-[color:var(--border)]",
+        ].join(" ")}
         aria-expanded={open}
         aria-haspopup="menu"
       >
@@ -62,14 +56,14 @@ function RowMenu({
           />
 
           <div
-            className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10"
+            className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg border bg-[color:var(--bg-card)] shadow-lg border-[color:var(--border)]"
             role="menu"
           >
             <a
               href={fileUrl}
               target="_blank"
               rel="noreferrer"
-              className="block px-3 py-2 text-sm hover:bg-slate-50"
+              className="block px-3 py-2 text-sm text-[color:var(--text-main)] hover:bg-[color:var(--bg-main)]"
               role="menuitem"
               onClick={() => setOpen(false)}
             >
@@ -119,13 +113,13 @@ export default function NoticesPage() {
   const shown = filtered.slice(0, visible);
 
   return (
-    <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+    <main className="px-4 py-6 sm:px-6 lg:px-8 bg-[color:var(--bg-main)] text-[color:var(--text-main)]">
       <div className="py-4">
         <h1 className="text-2xl sm:text-3xl font-semibold">{t("studentsTitle")}</h1>
 
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <select
-            className="w-56 rounded border bg-white px-3 py-2 text-sm"
+            className="w-56 rounded border px-3 py-2 text-sm bg-[color:var(--bg-card)] text-[color:var(--text-main)] border-[color:var(--border)]"
             value={category}
             onChange={(e) => {
               setCategory(e.target.value);
@@ -141,7 +135,7 @@ export default function NoticesPage() {
           </select>
 
           {category !== "ALL" && (
-            <span className="text-xs text-slate-600">
+            <span className="text-xs text-[color:var(--text-muted)]">
               {t("categoryLabel")}{" "}
               <span className="font-semibold">{t(`categories.${categoryKey(category)}`)}</span>
             </span>
@@ -149,23 +143,25 @@ export default function NoticesPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="overflow-hidden rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">
         <div className="bg-sky-600 px-4 py-2 text-white font-semibold">{t("sectionTitle")}</div>
 
         {/* MOBILE */}
-        <div className="sm:hidden divide-y">
+        <div className="sm:hidden divide-y divide-[color:var(--border)]">
           {shown.map((n: Notice, idx: number) => {
             const catBn = getStudentCategoryBn(n);
             return (
               <div key={n.id} className="flex items-start justify-between gap-3 p-3">
                 <div className="min-w-0">
-                  <div className="text-xs text-slate-600">
+                  <div className="text-xs text-[color:var(--text-muted)]">
                     {idx + 1}. {formatDateShort(n.date)}
                   </div>
 
-                  <div className="mt-1 font-medium text-slate-900 leading-snug">{n.title}</div>
+                  <div className="mt-1 font-medium leading-snug text-[color:var(--text-main)]">
+                    {n.title}
+                  </div>
 
-                  <div className="mt-1 text-[11px] text-slate-600">
+                  <div className="mt-1 text-[11px] text-[color:var(--text-muted)]">
                     {t(`categories.${categoryKey(catBn)}`)}
                   </div>
                 </div>
@@ -176,15 +172,15 @@ export default function NoticesPage() {
           })}
 
           {shown.length === 0 && (
-            <div className="p-6 text-center text-slate-600">{c("emptyNotices")}</div>
+            <div className="p-6 text-center text-[color:var(--text-muted)]">{c("emptyNotices")}</div>
           )}
         </div>
 
         {/* DESKTOP/TABLET */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
-            <thead className="bg-slate-50 text-slate-700">
-              <tr className="border-b">
+            <thead className="bg-[color:var(--bg-main)] text-[color:var(--text-muted)]">
+              <tr className="border-b border-[color:var(--border)]">
                 <th className="p-2 text-center w-16">{t("th.sl")}</th>
                 <th className="p-2 text-left w-28">{t("th.date")}</th>
                 <th className="p-2 text-left min-w-[240px]">{t("th.title")}</th>
@@ -193,15 +189,19 @@ export default function NoticesPage() {
               </tr>
             </thead>
 
-            <tbody className="divide-y">
+            <tbody className="divide-y divide-[color:var(--border)]">
               {shown.map((n: Notice, idx: number) => {
                 const catBn = getStudentCategoryBn(n);
                 return (
-                  <tr key={n.id} className="hover:bg-slate-50">
-                    <td className="p-2 text-center text-slate-700">{idx + 1}</td>
-                    <td className="p-2 text-slate-700 whitespace-nowrap">{formatDateShort(n.date)}</td>
-                    <td className="p-2 text-slate-900">{n.title}</td>
-                    <td className="p-2 text-slate-700">{t(`categories.${categoryKey(catBn)}`)}</td>
+                  <tr key={n.id} className="hover:bg-[color:var(--bg-main)]">
+                    <td className="p-2 text-center text-[color:var(--text-muted)]">{idx + 1}</td>
+                    <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
+                      {formatDateShort(n.date)}
+                    </td>
+                    <td className="p-2 text-[color:var(--text-main)]">{n.title}</td>
+                    <td className="p-2 text-[color:var(--text-muted)]">
+                      {t(`categories.${categoryKey(catBn)}`)}
+                    </td>
                     <td className="p-2 text-center">
                       {n.fileUrl ? (
                         <a
@@ -213,7 +213,7 @@ export default function NoticesPage() {
                           {c("pdf")}
                         </a>
                       ) : (
-                        <span className="text-xs text-slate-400">{c("na")}</span>
+                        <span className="text-xs text-[color:var(--text-muted)]">{c("na")}</span>
                       )}
                     </td>
                   </tr>
@@ -222,7 +222,7 @@ export default function NoticesPage() {
 
               {shown.length === 0 && (
                 <tr>
-                  <td className="p-6 text-center text-slate-600" colSpan={5}>
+                  <td className="p-6 text-center text-[color:var(--text-muted)]" colSpan={5}>
                     {c("emptyNotices")}
                   </td>
                 </tr>
@@ -240,13 +240,13 @@ export default function NoticesPage() {
               {c("loadMore")}
             </button>
           ) : (
-            <span className="text-xs text-slate-500">{c("noMore")}</span>
+            <span className="text-xs text-[color:var(--text-muted)]">{c("noMore")}</span>
           )}
         </div>
       </div>
 
       <div className="mt-4">
-        <Link className="text-sm text-sky-700 hover:underline" href="/">
+        <Link className="text-sm text-sky-600 hover:underline" href="/">
           {c("backHome")}
         </Link>
       </div>
