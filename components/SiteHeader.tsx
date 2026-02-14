@@ -8,11 +8,13 @@ export default function SiteHeader() {
           {/* Left logo */}
           <div className="col-span-3 sm:col-span-2 flex items-center justify-start">
             <div className="relative h-12 w-12 sm:h-14 sm:w-14">
-              {/* Replace with your real logo file later */}
-              <div className="h-full w-full rounded bg-gray-100" />
-              {/* Example when you have file:
-              <Image src="/logo-left.png" alt="Logo" fill className="object-contain" />
-              */}
+              <Image
+                src="/logo-left.png"
+                alt="কলেজ লোগো"
+                fill
+                className="object-contain"
+                priority
+              />
             </div>
           </div>
 
@@ -30,7 +32,9 @@ export default function SiteHeader() {
           <div className="col-span-3 sm:col-span-2 flex items-center justify-end">
             <div className="relative h-12 w-12 sm:h-14 sm:w-14">
               <div className="h-full w-full rounded bg-gray-100" />
-              {/* <Image src="/logo-right.png" alt="Logo" fill className="object-contain" /> */}
+              {/* Later replace with:
+              <Image src="/logo-right.png" alt="Logo" fill className="object-contain" />
+              */}
             </div>
           </div>
         </div>

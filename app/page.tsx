@@ -1,7 +1,10 @@
 import TopBar from "@/components/TopBar";
 import SiteHeader from "@/components/SiteHeader";
 import Navbar from "@/components/Navbar";
-import HeroSlider from "@/components/HeroSlider";
+
+import HeroImageSlider from "@/components/HeroImageSlider";
+import LatestNoticeSlider from "@/components/LatestNoticeSlider";
+
 import NoticeTable from "@/components/NoticeTable";
 import SidebarLinks from "@/components/SidebarLinks";
 import Footer from "@/components/Footer";
@@ -14,7 +17,13 @@ export default function Home() {
       <Navbar />
 
       <main className="mx-auto max-w-5xl px-3 sm:px-4 lg:px-6 py-4">
-        <HeroSlider />
+        {/* 1) Photo slider */}
+        <HeroImageSlider />
+
+        {/* 2) Notice slider (below photo slider) */}
+        <div className="mt-3">
+          <LatestNoticeSlider />
+        </div>
 
         <section className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-12">
           <div className="md:col-span-4">
