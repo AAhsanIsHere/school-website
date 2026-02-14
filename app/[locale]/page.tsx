@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+
 import TopBar from "@/components/TopBar";
 import SiteHeader from "@/components/SiteHeader";
 import Navbar from "@/components/Navbar";
@@ -10,6 +12,8 @@ import SidebarLinks from "@/components/SidebarLinks";
 import Footer from "@/components/Footer";
 
 export default function Home() {
+  const t = useTranslations("home");
+
   return (
     <>
       <TopBar />
@@ -31,7 +35,7 @@ export default function Home() {
             <div className="rounded-xl bg-white p-4 shadow-sm ring-1 ring-black/5">
               <div className="flex items-center gap-2">
                 <span className="h-4 w-[3px] bg-sky-600" />
-                <h2 className="text-lg font-semibold">অধ্যক্ষ</h2>
+                <h2 className="text-lg font-semibold">{t("principalTitle")}</h2>
               </div>
 
               <div className="mt-3 overflow-hidden rounded-lg bg-slate-100 ring-1 ring-black/5">
@@ -40,7 +44,7 @@ export default function Home() {
               </div>
 
               <p className="mt-3 text-sm text-slate-700 leading-relaxed">
-                এখানে অধ্যক্ষের সংক্ষিপ্ত বার্তা থাকবে…
+                {t("principalMessage")}
               </p>
             </div>
           </div>

@@ -1,4 +1,6 @@
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+
 import { studentNotices, type Notice } from "@/lib/notices";
 
 function formatDateShort(iso: string) {
@@ -11,6 +13,8 @@ function formatDateShort(iso: string) {
 }
 
 export default function NoticeTable() {
+  const t = useTranslations("noticeTable");
+
   const rows: Notice[] = [...studentNotices]
     .sort((a, b) => b.date.localeCompare(a.date))
     .slice(0, 6);
@@ -21,7 +25,7 @@ export default function NoticeTable() {
       <div className="px-3 pt-3">
         <div className="flex items-center gap-2">
           <span className="h-4 w-[3px] bg-sky-600" />
-          <h2 className="text-lg font-semibold">বিজ্ঞপ্তি</h2>
+          <h2 className="text-lg font-semibold">{t("title")}</h2>
         </div>
       </div>
 
@@ -29,10 +33,10 @@ export default function NoticeTable() {
         <table className="w-full text-sm">
           <thead className="bg-sky-600 text-white">
             <tr>
-              <th className="p-2 text-center w-12">#</th>
-              <th className="p-2 text-left w-28">তারিখ</th>
-              <th className="p-2 text-left">শিরোনাম</th>
-              <th className="p-2 text-center w-24">ডাউনলোড</th>
+              <th className="p-2 text-center w-12">{t("th.sl")}</th>
+              <th className="p-2 text-left w-28">{t("th.date")}</th>
+              <th className="p-2 text-left">{t("th.title")}</th>
+              <th className="p-2 text-center w-24">{t("th.download")}</th>
             </tr>
           </thead>
 
@@ -40,7 +44,9 @@ export default function NoticeTable() {
             {rows.map((n, i) => (
               <tr key={n.id} className="hover:bg-slate-50">
                 <td className="p-2 text-center">{i + 1}</td>
-                <td className="p-2 whitespace-nowrap">{formatDateShort(n.date)}</td>
+                <td className="p-2 whitespace-nowrap">
+                  {formatDateShort(n.date)}
+                </td>
                 <td className="p-2">{n.title}</td>
                 <td className="p-2 text-center">
                   {n.fileUrl ? (
@@ -50,10 +56,10 @@ export default function NoticeTable() {
                       rel="noreferrer"
                       className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
                     >
-                      PDF
+                      {t("pdf")}
                     </a>
                   ) : (
-                    <span className="text-xs text-slate-400">N/A</span>
+                    <span className="text-xs text-slate-400">{t("na")}</span>
                   )}
                 </td>
               </tr>
@@ -62,7 +68,7 @@ export default function NoticeTable() {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={4} className="p-6 text-center text-slate-600">
-                  কোনো নোটিশ পাওয়া যায়নি।
+                  {t("empty")}
                 </td>
               </tr>
             )}
@@ -76,7 +82,7 @@ export default function NoticeTable() {
           href="/notices"
           className="rounded bg-sky-600 px-8 py-2 text-sm font-semibold text-white hover:bg-sky-700"
         >
-          সকল নোটিশ
+          {t("allBtn")}
         </Link>
       </div>
     </div>

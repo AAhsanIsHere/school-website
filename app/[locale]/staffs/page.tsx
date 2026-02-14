@@ -1,19 +1,34 @@
+import Image from "next/image";
+import { useTranslations } from "next-intl";
+
 import TopBar from "@/components/TopBar";
 import SiteHeader from "@/components/SiteHeader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-const staffs = [
-  { name: "কর্মচারীর নাম ১", title: "পদবি", img: "/placeholder-person.png" },
-  { name: "কর্মচারীর নাম ২", title: "পদবি", img: "/placeholder-person.png" },
-  { name: "কর্মচারীর নাম ৩", title: "পদবি", img: "/placeholder-person.png" },
-  { name: "কর্মচারীর নাম ৪", title: "পদবি", img: "/placeholder-person.png" },
-];
+const staffIds = [1, 2, 3, 4];
 
-function PersonCard({ name, title }: { name: string; title: string }) {
+function PersonCard({
+  name,
+  title,
+  img,
+}: {
+  name: string;
+  title: string;
+  img: string;
+}) {
   return (
     <div className="rounded-xl bg-white shadow-sm ring-1 ring-black/5 p-4 text-center">
-      <div className="mx-auto h-28 w-28 rounded bg-slate-100" />
+      <div className="mx-auto h-28 w-28 overflow-hidden rounded bg-slate-100">
+        <Image
+          src={img}
+          alt={name}
+          width={112}
+          height={112}
+          className="h-full w-full object-cover"
+        />
+      </div>
+
       <div className="mt-3 font-semibold text-sm">{name}</div>
       <div className="text-xs text-slate-600">{title}</div>
     </div>
@@ -21,6 +36,8 @@ function PersonCard({ name, title }: { name: string; title: string }) {
 }
 
 export default function StaffsPage() {
+  const t = useTranslations("staffsPage");
+
   return (
     <div className="min-h-screen bg-slate-100 py-3 sm:py-6">
       <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-white shadow-md">
@@ -29,11 +46,18 @@ export default function StaffsPage() {
         <Navbar />
 
         <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-2xl sm:text-3xl font-semibold mb-6">কর্মচারীবৃন্দ</h1>
+          <h1 className="text-2xl sm:text-3xl font-semibold mb-6">
+            {t("title")}
+          </h1>
 
           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {staffs.map((s) => (
-              <PersonCard key={s.name} name={s.name} title={s.title} />
+            {staffIds.map((n) => (
+              <PersonCard
+                key={n}
+                name={t("placeholderName", { n })}
+                title={t("placeholderTitle")}
+                img="/placeholder-person.png"
+              />
             ))}
           </div>
         </main>

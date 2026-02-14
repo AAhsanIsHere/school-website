@@ -1,7 +1,9 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
+
 import { studentNotices, type Notice } from "@/lib/notices";
 
 function formatDateShort(iso: string) {
@@ -14,24 +16,31 @@ function formatDateShort(iso: string) {
 }
 
 export default function LatestNoticeSlider() {
+  const t = useTranslations("latestNotice");
+
   const items = useMemo(() => {
     return [...studentNotices].sort((a, b) => b.date.localeCompare(a.date));
   }, []);
 
   const [idx, setIdx] = useState(0);
 
-  const current: Notice | undefined = items.length ? items[idx % items.length] : undefined;
+  const current: Notice | undefined = items.length
+    ? items[idx % items.length]
+    : undefined;
 
-  const prev = () => setIdx((v) => (items.length ? (v - 1 + items.length) % items.length : 0));
-  const next = () => setIdx((v) => (items.length ? (v + 1) % items.length : 0));
+  const prev = () =>
+    setIdx((v) =>
+      items.length ? (v - 1 + items.length) % items.length : 0
+    );
+  const next = () =>
+    setIdx((v) => (items.length ? (v + 1) % items.length : 0));
 
-  // auto slide (optional)
   useEffect(() => {
     if (items.length <= 1) return;
-    const t = setInterval(() => {
+    const timer = setInterval(() => {
       setIdx((v) => (v + 1) % items.length);
     }, 5000);
-    return () => clearInterval(t);
+    return () => clearInterval(timer);
   }, [items.length]);
 
   return (
@@ -39,7 +48,7 @@ export default function LatestNoticeSlider() {
       <div className="flex items-center">
         {/* Left blue label */}
         <div className="bg-sky-600 px-4 py-2 text-sm font-semibold text-white whitespace-nowrap">
-          কলেজের কার্যক্রম সর্বশেষ
+          {t("label")}
         </div>
 
         {/* Middle text */}
@@ -71,7 +80,7 @@ export default function LatestNoticeSlider() {
               )}
             </div>
           ) : (
-            <span className="text-slate-500">কোনো নোটিশ নেই</span>
+            <span className="text-slate-500">{t("empty")}</span>
           )}
         </div>
 
@@ -81,7 +90,8 @@ export default function LatestNoticeSlider() {
             type="button"
             onClick={prev}
             className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
-            aria-label="Previous"
+            aria-label={t("prev")}
+            title={t("prev")}
           >
             ‹
           </button>
@@ -89,7 +99,8 @@ export default function LatestNoticeSlider() {
             type="button"
             onClick={next}
             className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
-            aria-label="Next"
+            aria-label={t("next")}
+            title={t("next")}
           >
             ›
           </button>

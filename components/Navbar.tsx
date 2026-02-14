@@ -1,25 +1,26 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import Link from "next/link";
-
-const links = [
-  { label: "হোম", href: "/" },
-  { label: "ডাউনলোড", href: "/downloads" },
-  { label: "যোগাযোগ", href: "/contact" },
-];
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 export default function Navbar() {
+  const t = useTranslations();
+
+  const links = [
+    { label: t("nav.home"), href: "/" },
+    { label: t("nav.downloads"), href: "/downloads" },
+    { label: t("nav.contact"), href: "/contact" },
+  ];
+
   const [open, setOpen] = useState(false);
 
   const [dropdownOpen, setDropdownOpen] = useState(false); // teacher/staff desktop
   const [staffMenuOpen, setStaffMenuOpen] = useState(false); // teacher/staff mobile
 
-  // Notice dropdown states
   const [noticeDropdownOpen, setNoticeDropdownOpen] = useState(false); // desktop
   const [noticeMenuOpen, setNoticeMenuOpen] = useState(false); // mobile
 
-  // desktop dropdown click-outside close
   const dropdownRef = useRef<HTMLLIElement | null>(null);
   const noticeDropdownRef = useRef<HTMLLIElement | null>(null);
 
@@ -43,7 +44,7 @@ export default function Navbar() {
   return (
     <nav className="bg-white shadow-sm">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
-        <div className="font-semibold">মেনু</div>
+        <div className="font-semibold">{t("nav.menu")}</div>
 
         {/* Mobile toggle */}
         <button
@@ -63,7 +64,7 @@ export default function Navbar() {
           {/* Home */}
           <li>
             <Link className="hover:text-sky-700" href="/">
-              হোম
+              {t("nav.home")}
             </Link>
           </li>
 
@@ -79,7 +80,7 @@ export default function Navbar() {
                 setDropdownOpen(false);
               }}
             >
-              নোটিশ <span className="text-xs">▾</span>
+              {t("nav.notice")} <span className="text-xs">▾</span>
             </button>
 
             {noticeDropdownOpen && (
@@ -89,14 +90,14 @@ export default function Navbar() {
                   href="/notices"
                   onClick={() => setNoticeDropdownOpen(false)}
                 >
-                  শিক্ষার্থীদের নোটিশ
+                  {t("nav.notice_students")}
                 </Link>
                 <Link
                   className="block px-3 py-2 text-sm hover:bg-slate-50"
                   href="/office-noc"
                   onClick={() => setNoticeDropdownOpen(false)}
                 >
-                  অফিস NOC
+                  {t("nav.notice_office")}
                 </Link>
               </div>
             )}
@@ -125,7 +126,7 @@ export default function Navbar() {
                 setNoticeDropdownOpen(false);
               }}
             >
-              শিক্ষক/কর্মচারী <span className="text-xs">▾</span>
+              {t("nav.staff")} <span className="text-xs">▾</span>
             </button>
 
             {dropdownOpen && (
@@ -135,21 +136,21 @@ export default function Navbar() {
                   href="/principal"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  অধ্যক্ষ
+                  {t("nav.principal")}
                 </Link>
                 <Link
                   className="block px-3 py-2 text-sm hover:bg-slate-50"
                   href="/teachers"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  শিক্ষকবৃন্দ
+                  {t("nav.teachers")}
                 </Link>
                 <Link
                   className="block px-3 py-2 text-sm hover:bg-slate-50"
                   href="/staffs"
                   onClick={() => setDropdownOpen(false)}
                 >
-                  কর্মচারীবৃন্দ
+                  {t("nav.staffs")}
                 </Link>
               </div>
             )}
@@ -163,7 +164,7 @@ export default function Navbar() {
           <div className="mx-auto max-w-5xl px-4 py-2 text-sm flex flex-col gap-2">
             {/* Home */}
             <Link className="py-1 hover:text-sky-700" href="/" onClick={() => setOpen(false)}>
-              হোম
+              {t("nav.home")}
             </Link>
 
             {/* Notice collapsible dropdown (Mobile) */}
@@ -174,7 +175,7 @@ export default function Navbar() {
                 className="w-full flex items-center justify-between py-1 font-normal"
                 aria-expanded={noticeMenuOpen}
               >
-                <span>নোটিশ</span>
+                <span>{t("nav.notice")}</span>
                 <span className="text-xs">{noticeMenuOpen ? "▴" : "▾"}</span>
               </button>
 
@@ -185,14 +186,14 @@ export default function Navbar() {
                     href="/notices"
                     onClick={() => setOpen(false)}
                   >
-                    শিক্ষার্থীদের নোটিশ
+                    {t("nav.notice_students")}
                   </Link>
                   <Link
                     className="block py-1 hover:text-sky-700"
                     href="/office-noc"
                     onClick={() => setOpen(false)}
                   >
-                    অফিস NOC
+                    {t("nav.notice_office")}
                   </Link>
                 </div>
               )}
@@ -220,7 +221,7 @@ export default function Navbar() {
                 className="w-full flex items-center justify-between py-1 font-normal"
                 aria-expanded={staffMenuOpen}
               >
-                <span>শিক্ষক/কর্মচারী</span>
+                <span>{t("nav.staff")}</span>
                 <span className="text-xs">{staffMenuOpen ? "▴" : "▾"}</span>
               </button>
 
@@ -231,21 +232,21 @@ export default function Navbar() {
                     href="/principal"
                     onClick={() => setOpen(false)}
                   >
-                    অধ্যক্ষ
+                    {t("nav.principal")}
                   </Link>
                   <Link
                     className="block py-1 hover:text-sky-700"
                     href="/teachers"
                     onClick={() => setOpen(false)}
                   >
-                    শিক্ষকবৃন্দ
+                    {t("nav.teachers")}
                   </Link>
                   <Link
                     className="block py-1 hover:text-sky-700"
                     href="/staffs"
                     onClick={() => setOpen(false)}
                   >
-                    কর্মচারীবৃন্দ
+                    {t("nav.staffs")}
                   </Link>
                 </div>
               )}

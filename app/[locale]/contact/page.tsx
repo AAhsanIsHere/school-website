@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 
 import TopBar from "@/components/TopBar";
 import SiteHeader from "@/components/SiteHeader";
@@ -8,6 +9,8 @@ import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
 export default function ContactPage() {
+  const t = useTranslations();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
@@ -24,7 +27,7 @@ export default function ContactPage() {
 
   function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    // For school project: just show a message. Later you can connect to email/API.
+    // Keep this Bangla message for now or create a translation key later
     alert("ধন্যবাদ! আপনার বার্তা গ্রহণ করা হয়েছে।");
     setForm({ name: "", email: "", subject: "", phone: "", message: "" });
   }
@@ -42,7 +45,9 @@ export default function ContactPage() {
             <div className="grid grid-cols-1 gap-8 md:grid-cols-12">
               {/* Left: contact info */}
               <div className="md:col-span-5">
-                <h1 className="text-2xl font-semibold mb-4">ঠিকানা</h1>
+                <h1 className="text-2xl font-semibold mb-4">
+                  {t("contact.addressTitle")}
+                </h1>
 
                 <ul className="space-y-2 text-sm text-slate-800">
                   <li className="flex gap-2">
@@ -69,7 +74,7 @@ export default function ContactPage() {
                   <div className="grid grid-cols-1 gap-3">
                     <input
                       className="w-full rounded border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-200"
-                      placeholder="নাম"
+                      placeholder={t("contact.name")}
                       name="name"
                       value={form.name}
                       onChange={onChange}
@@ -77,7 +82,7 @@ export default function ContactPage() {
                     />
                     <input
                       className="w-full rounded border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-200"
-                      placeholder="ইমেইল"
+                      placeholder={t("contact.email")}
                       name="email"
                       type="email"
                       value={form.email}
@@ -86,21 +91,21 @@ export default function ContactPage() {
                     />
                     <input
                       className="w-full rounded border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-200"
-                      placeholder="বিষয়"
+                      placeholder={t("contact.subject")}
                       name="subject"
                       value={form.subject}
                       onChange={onChange}
                     />
                     <input
                       className="w-full rounded border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-200"
-                      placeholder="ফোন"
+                      placeholder={t("contact.phone")}
                       name="phone"
                       value={form.phone}
                       onChange={onChange}
                     />
                     <textarea
                       className="min-h-[140px] w-full rounded border px-3 py-2 text-sm outline-none focus:ring-2 focus:ring-sky-200"
-                      placeholder="বার্তা"
+                      placeholder={t("contact.message")}
                       name="message"
                       value={form.message}
                       onChange={onChange}
@@ -112,14 +117,14 @@ export default function ContactPage() {
                     type="submit"
                     className="mt-3 rounded bg-sky-600 px-4 py-2 text-sm font-semibold text-white hover:bg-sky-700"
                   >
-                    Submit
+                    {t("contact.submit")}
                   </button>
                 </form>
               </div>
             </div>
           </section>
 
-          {/* Map (like screenshot) */}
+          {/* Map */}
           <section className="border-t">
             <div className="h-[280px] w-full">
               <iframe

@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 
 import TopBar from "@/components/TopBar";
 import SiteHeader from "@/components/SiteHeader";
@@ -20,21 +21,28 @@ function formatDateShort(iso: string) {
 }
 
 function RowMenu({ fileUrl }: { fileUrl?: string }) {
+  const t = useTranslations("officeNoc");
   const [open, setOpen] = useState(false);
+  const disabled = !fileUrl;
 
   return (
     <div className="relative inline-block">
       <button
         type="button"
+        disabled={disabled}
         onClick={() => setOpen((v) => !v)}
-        className="rounded bg-slate-100 px-2 py-1 text-sm hover:bg-slate-200"
+        className={`rounded px-2 py-1 text-sm ${
+          disabled
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-slate-100 hover:bg-slate-200"
+        }`}
         aria-expanded={open}
         aria-haspopup="menu"
       >
         ⋮
       </button>
 
-      {open && (
+      {open && !disabled && (
         <>
           <button
             type="button"
@@ -48,12 +56,14 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
             role="menu"
           >
             <a
-              href={fileUrl ?? "#"}
+              href={fileUrl}
+              target="_blank"
+              rel="noreferrer"
               className="block px-3 py-2 text-sm hover:bg-slate-50"
               role="menuitem"
               onClick={() => setOpen(false)}
             >
-              PDF ডাউনলোড
+              {t("downloadPdf")}
             </a>
           </div>
         </>
@@ -63,6 +73,8 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
 }
 
 export default function OfficeNocPage() {
+  const t = useTranslations("officeNoc");
+
   const sorted = useMemo(
     () => [...allNotices].sort((a, b) => (a.date < b.date ? 1 : -1)),
     []
@@ -77,12 +89,12 @@ export default function OfficeNocPage() {
 
         <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
           <div className="py-4">
-            <h1 className="text-2xl sm:text-3xl font-semibold">অফিস NOC</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold">{t("title")}</h1>
           </div>
 
           <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
             <div className="bg-sky-600 px-4 py-2 text-white font-semibold">
-              অফিস NOC তালিকা
+              {t("listTitle")}
             </div>
 
             {/* Mobile */}
@@ -106,7 +118,7 @@ export default function OfficeNocPage() {
 
               {sorted.length === 0 && (
                 <div className="p-6 text-center text-slate-600">
-                  কোনো অফিস NOC পাওয়া যায়নি।
+                  {t("empty")}
                 </div>
               )}
             </div>
@@ -116,10 +128,10 @@ export default function OfficeNocPage() {
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-slate-700">
                   <tr className="border-b">
-                    <th className="p-2 text-center w-16">ক্রমিক</th>
-                    <th className="p-2 text-left w-28">তারিখ</th>
-                    <th className="p-2 text-left min-w-[240px]">শিরোনাম</th>
-                    <th className="p-2 text-center w-28">ডাউনলোড</th>
+                    <th className="p-2 text-center w-16">{t("th.sl")}</th>
+                    <th className="p-2 text-left w-28">{t("th.date")}</th>
+                    <th className="p-2 text-left min-w-[240px]">{t("th.title")}</th>
+                    <th className="p-2 text-center w-28">{t("th.download")}</th>
                   </tr>
                 </thead>
 
@@ -134,12 +146,20 @@ export default function OfficeNocPage() {
                       </td>
                       <td className="p-2 text-slate-900">{n.title}</td>
                       <td className="p-2 text-center">
-                        <a
-                          href={n.fileUrl ?? "#"}
-                          className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
-                        >
-                          PDF
-                        </a>
+                        {n.fileUrl ? (
+                          <a
+                            href={n.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+                          >
+                            PDF
+                          </a>
+                        ) : (
+                          <span className="text-xs text-slate-400">
+                            {t("na")}
+                          </span>
+                        )}
                       </td>
                     </tr>
                   ))}
@@ -147,7 +167,7 @@ export default function OfficeNocPage() {
                   {sorted.length === 0 && (
                     <tr>
                       <td className="p-6 text-center text-slate-600" colSpan={4}>
-                        কোনো অফিস NOC পাওয়া যায়নি।
+                        {t("empty")}
                       </td>
                     </tr>
                   )}
@@ -158,7 +178,7 @@ export default function OfficeNocPage() {
 
           <div className="mt-4">
             <Link className="text-sm text-sky-700 hover:underline" href="/">
-              ← হোমে ফিরে যান
+              {t("backHome")}
             </Link>
           </div>
         </main>
