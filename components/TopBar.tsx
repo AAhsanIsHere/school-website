@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function TopBar() {
   return (
     <div className="bg-sky-700 text-white">
@@ -9,12 +11,15 @@ export default function TopBar() {
         </div>
 
         <div className="flex items-center gap-3">
-          <a className="hover:underline" href="#">
+          {/* Login page */}
+          <Link className="hover:underline" href="/login">
             লগইন
-          </a>
-          <a className="hover:underline hidden sm:inline" href="#">
+          </Link>
+
+          {/* Contact page */}
+          <Link className="hover:underline hidden sm:inline" href="/contact">
             যোগাযোগ
-          </a>
+          </Link>
         </div>
       </div>
     </div>

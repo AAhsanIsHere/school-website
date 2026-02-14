@@ -1,13 +1,18 @@
 import Image from "next/image";
+import Link from "next/link";
 
 export default function SiteHeader() {
   return (
     <header className="bg-white">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-4">
         <div className="grid grid-cols-12 items-center gap-2">
-          {/* Left logo */}
+          {/* Left logo (click to home) */}
           <div className="col-span-3 sm:col-span-2 flex items-center justify-start">
-            <div className="relative h-12 w-12 sm:h-14 sm:w-14">
+            <Link
+              href="/"
+              aria-label="হোমে ফিরে যান"
+              className="relative h-12 w-12 sm:h-14 sm:w-14 cursor-pointer"
+            >
               <Image
                 src="/logo-left.png"
                 alt="কলেজ লোগো"
@@ -15,7 +20,7 @@ export default function SiteHeader() {
                 className="object-contain"
                 priority
               />
-            </div>
+            </Link>
           </div>
 
           {/* Title */}
