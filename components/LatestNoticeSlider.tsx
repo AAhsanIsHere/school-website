@@ -2,72 +2,94 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { notices as allNotices, type Notice } from "@/lib/notices";
+import { studentNotices, type Notice } from "@/lib/notices";
+
+function formatDateShort(iso: string) {
+  const d = new Date(iso + "T00:00:00");
+  return d.toLocaleDateString("en-GB", {
+    day: "2-digit",
+    month: "short",
+    year: "2-digit",
+  });
+}
 
 export default function LatestNoticeSlider() {
-  const notices = useMemo(() => {
-    return [...allNotices].sort((a, b) => (a.date < b.date ? 1 : -1)).slice(0, 15);
+  const items = useMemo(() => {
+    return [...studentNotices].sort((a, b) => b.date.localeCompare(a.date));
   }, []);
 
-  const [index, setIndex] = useState(0);
-  const prev = () => setIndex((i) => (i - 1 + notices.length) % notices.length);
-  const next = () => setIndex((i) => (i + 1) % notices.length);
+  const [idx, setIdx] = useState(0);
 
+  const current: Notice | undefined = items.length ? items[idx % items.length] : undefined;
+
+  const prev = () => setIdx((v) => (items.length ? (v - 1 + items.length) % items.length : 0));
+  const next = () => setIdx((v) => (items.length ? (v + 1) % items.length : 0));
+
+  // auto slide (optional)
   useEffect(() => {
-    if (notices.length <= 1) return;
-    const t = setInterval(() => setIndex((i) => (i + 1) % notices.length), 3500);
+    if (items.length <= 1) return;
+    const t = setInterval(() => {
+      setIdx((v) => (v + 1) % items.length);
+    }, 5000);
     return () => clearInterval(t);
-  }, [notices.length]);
-
-  const current: Notice | null = notices.length ? notices[index] : null;
+  }, [items.length]);
 
   return (
-    <div className="rounded border bg-white shadow-sm">
-      <div className="flex items-center gap-2 px-2 py-2">
-        {/* Left blue tag */}
-        <Link
-          href="/notices"
-          className="shrink-0 rounded bg-sky-700 px-3 py-2 text-xs font-semibold text-white hover:bg-sky-800"
-        >
-          কলেজের সর্বশেষ নোটিশ
-        </Link>
+    <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
+      <div className="flex items-center">
+        {/* Left blue label */}
+        <div className="bg-sky-600 px-4 py-2 text-sm font-semibold text-white whitespace-nowrap">
+          কলেজের কার্যক্রম সর্বশেষ
+        </div>
 
-        {/* Scrolling/caption text */}
-        <div className="min-w-0 flex-1 text-sm text-slate-800">
+        {/* Middle text */}
+        <div className="flex-1 px-4 py-2 text-sm min-w-0">
           {current ? (
-            <div className="flex items-center gap-2 min-w-0">
-              <span className="truncate">{current.title}</span>
+            <div className="flex items-center gap-3 min-w-0">
+              <span className="text-xs text-slate-600 whitespace-nowrap">
+                {formatDateShort(current.date)}
+              </span>
+
               {current.fileUrl ? (
                 <a
                   href={current.fileUrl}
-                  className="shrink-0 rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="truncate hover:underline"
+                  title={current.title}
                 >
-                  PDF
+                  {current.title}
                 </a>
-              ) : null}
+              ) : (
+                <Link
+                  href="/notices"
+                  className="truncate hover:underline"
+                  title={current.title}
+                >
+                  {current.title}
+                </Link>
+              )}
             </div>
           ) : (
-            <span className="text-slate-500">এখনো কোনো নোটিশ যোগ করা হয়নি।</span>
+            <span className="text-slate-500">কোনো নোটিশ নেই</span>
           )}
         </div>
 
         {/* Right arrows */}
-        <div className="shrink-0 flex items-center gap-1">
+        <div className="flex items-center gap-1 px-2">
           <button
             type="button"
             onClick={prev}
-            disabled={notices.length <= 1}
-            className="h-9 w-9 rounded border bg-white hover:bg-slate-50 disabled:opacity-50"
-            aria-label="Previous notice"
+            className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
+            aria-label="Previous"
           >
             ‹
           </button>
           <button
             type="button"
             onClick={next}
-            disabled={notices.length <= 1}
-            className="h-9 w-9 rounded border bg-white hover:bg-slate-50 disabled:opacity-50"
-            aria-label="Next notice"
+            className="h-8 w-8 rounded hover:bg-slate-100 flex items-center justify-center"
+            aria-label="Next"
           >
             ›
           </button>

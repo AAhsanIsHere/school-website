@@ -8,7 +8,8 @@ import SiteHeader from "@/components/SiteHeader";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 
-import { notices as allNotices, type Notice } from "@/lib/notices";
+// ✅ Students-only list (make sure you export this from lib/notices.ts)
+import { studentNotices as allNotices, type Notice } from "@/lib/notices";
 
 function formatDateShort(iso: string) {
   const d = new Date(iso + "T00:00:00");
@@ -21,20 +22,26 @@ function formatDateShort(iso: string) {
 
 function RowMenu({ fileUrl }: { fileUrl?: string }) {
   const [open, setOpen] = useState(false);
+  const disabled = !fileUrl;
 
   return (
     <div className="relative inline-block">
       <button
         type="button"
+        disabled={disabled}
         onClick={() => setOpen((v) => !v)}
-        className="rounded bg-slate-100 px-2 py-1 text-sm hover:bg-slate-200"
+        className={`rounded px-2 py-1 text-sm ${
+          disabled
+            ? "bg-slate-100 text-slate-400 cursor-not-allowed"
+            : "bg-slate-100 hover:bg-slate-200"
+        }`}
         aria-expanded={open}
         aria-haspopup="menu"
       >
         ⋮
       </button>
 
-      {open && (
+      {open && !disabled && (
         <>
           {/* click-outside backdrop */}
           <button
@@ -49,7 +56,9 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
             role="menu"
           >
             <a
-              href={fileUrl ?? "#"}
+              href={fileUrl}
+              target="_blank"
+              rel="noreferrer"
               className="block px-3 py-2 text-sm hover:bg-slate-50"
               role="menuitem"
               onClick={() => setOpen(false)}
@@ -67,17 +76,43 @@ export default function NoticesPage() {
   const [category, setCategory] = useState<string>("সকল");
   const [visible, setVisible] = useState<number>(10);
 
+  // preferred ordering for student categories (anything else will come after)
+  const preferredOrder = ["পরীক্ষা", "ছুটি", "ক্লাস নোটিশ", "সাধারণ", "অন্যান্য"];
+
   const categories = useMemo(() => {
     const set = new Set<string>();
-    for (const n of allNotices) if (n.category) set.add(n.category);
-    return ["সকল", ...Array.from(set)];
-  }, []);
+
+    // If some notices have no studentCategory, treat them as "সাধারণ"
+    for (const n of allNotices) {
+      const c = (n as any).studentCategory ?? "সাধারণ";
+      set.add(String(c));
+    }
+
+    const list = Array.from(set);
+
+    list.sort((a, b) => {
+      const ia = preferredOrder.indexOf(a);
+      const ib = preferredOrder.indexOf(b);
+
+      if (ia !== -1 && ib !== -1) return ia - ib;
+      if (ia !== -1) return -1;
+      if (ib !== -1) return 1;
+      return a.localeCompare(b);
+    });
+
+    return ["সকল", ...list];
+  }, [allNotices]);
 
   const filtered = useMemo(() => {
-    const sorted = [...allNotices].sort((a, b) => (a.date < b.date ? 1 : -1));
+    const sorted = [...allNotices].sort((a, b) => b.date.localeCompare(a.date));
+
     if (category === "সকল") return sorted;
-    return sorted.filter((n) => (n.category ?? "") === category);
-  }, [category]);
+
+    return sorted.filter((n) => {
+      const c = (n as any).studentCategory ?? "সাধারণ";
+      return String(c) === category;
+    });
+  }, [category, allNotices]);
 
   const shown = filtered.slice(0, visible);
 
@@ -90,11 +125,11 @@ export default function NoticesPage() {
 
         <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
           <div className="py-4">
-            <h1 className="text-2xl sm:text-3xl font-semibold">নোটিশ ডাউনলোড</h1>
+            <h1 className="text-2xl sm:text-3xl font-semibold">নোটিশ (শিক্ষার্থীদের জন্য)</h1>
 
-            <div className="mt-3">
+            <div className="mt-3 flex flex-wrap items-center gap-3">
               <select
-                className="w-44 rounded border bg-white px-3 py-2 text-sm"
+                className="w-48 rounded border bg-white px-3 py-2 text-sm"
                 value={category}
                 onChange={(e) => {
                   setCategory(e.target.value);
@@ -107,15 +142,19 @@ export default function NoticesPage() {
                   </option>
                 ))}
               </select>
+
+              {category !== "সকল" && (
+                <span className="text-xs text-slate-600">
+                  ক্যাটাগরি: <span className="font-semibold">{category}</span>
+                </span>
+              )}
             </div>
           </div>
 
           <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
-            <div className="bg-sky-600 px-4 py-2 text-white font-semibold">
-              নোটিশ
-            </div>
+            <div className="bg-sky-600 px-4 py-2 text-white font-semibold">নোটিশ</div>
 
-            {/* ✅ MOBILE VIEW (always shows the dropdown) */}
+            {/* ✅ MOBILE */}
             <div className="sm:hidden divide-y">
               {shown.map((n: Notice, idx: number) => (
                 <div key={n.id} className="flex items-start justify-between gap-3 p-3">
@@ -123,22 +162,24 @@ export default function NoticesPage() {
                     <div className="text-xs text-slate-600">
                       {idx + 1}. {formatDateShort(n.date)}
                     </div>
-                    <div className="mt-1 font-medium text-slate-900 leading-snug">
-                      {n.title}
+
+                    <div className="mt-1 font-medium text-slate-900 leading-snug">{n.title}</div>
+
+                    <div className="mt-1 text-[11px] text-slate-600">
+                      {(n as any).studentCategory ?? "সাধারণ"}
                     </div>
                   </div>
+
                   <RowMenu fileUrl={n.fileUrl} />
                 </div>
               ))}
 
               {shown.length === 0 && (
-                <div className="p-6 text-center text-slate-600">
-                  কোনো নোটিশ পাওয়া যায়নি।
-                </div>
+                <div className="p-6 text-center text-slate-600">কোনো নোটিশ পাওয়া যায়নি।</div>
               )}
             </div>
 
-            {/* ✅ DESKTOP/TABLET VIEW */}
+            {/* ✅ DESKTOP/TABLET */}
             <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-slate-700">
@@ -146,6 +187,7 @@ export default function NoticesPage() {
                     <th className="p-2 text-center w-16">ক্রমিক</th>
                     <th className="p-2 text-left w-28">তারিখ</th>
                     <th className="p-2 text-left min-w-[240px]">শিরোনাম</th>
+                    <th className="p-2 text-left w-32">ক্যাটাগরি</th>
                     <th className="p-2 text-center w-28">ডাউনলোড</th>
                   </tr>
                 </thead>
@@ -154,24 +196,37 @@ export default function NoticesPage() {
                   {shown.map((n: Notice, idx: number) => (
                     <tr key={n.id} className="hover:bg-slate-50">
                       <td className="p-2 text-center text-slate-700">{idx + 1}</td>
+
                       <td className="p-2 text-slate-700 whitespace-nowrap">
                         {formatDateShort(n.date)}
                       </td>
+
                       <td className="p-2 text-slate-900">{n.title}</td>
+
+                      <td className="p-2 text-slate-700">
+                        {(n as any).studentCategory ?? "সাধারণ"}
+                      </td>
+
                       <td className="p-2 text-center">
-                        <a
-                          href={n.fileUrl ?? "#"}
-                          className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
-                        >
-                          PDF
-                        </a>
+                        {n.fileUrl ? (
+                          <a
+                            href={n.fileUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+                          >
+                            PDF
+                          </a>
+                        ) : (
+                          <span className="text-xs text-slate-400">N/A</span>
+                        )}
                       </td>
                     </tr>
                   ))}
 
                   {shown.length === 0 && (
                     <tr>
-                      <td className="p-6 text-center text-slate-600" colSpan={4}>
+                      <td className="p-6 text-center text-slate-600" colSpan={5}>
                         কোনো নোটিশ পাওয়া যায়নি।
                       </td>
                     </tr>
