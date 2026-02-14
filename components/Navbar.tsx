@@ -15,11 +15,11 @@ export default function Navbar() {
 
   const [open, setOpen] = useState(false);
 
-  const [dropdownOpen, setDropdownOpen] = useState(false); // teacher/staff desktop
-  const [staffMenuOpen, setStaffMenuOpen] = useState(false); // teacher/staff mobile
+  const [dropdownOpen, setDropdownOpen] = useState(false); // staff desktop
+  const [staffMenuOpen, setStaffMenuOpen] = useState(false); // staff mobile
 
-  const [noticeDropdownOpen, setNoticeDropdownOpen] = useState(false); // desktop
-  const [noticeMenuOpen, setNoticeMenuOpen] = useState(false); // mobile
+  const [noticeDropdownOpen, setNoticeDropdownOpen] = useState(false); // notice desktop
+  const [noticeMenuOpen, setNoticeMenuOpen] = useState(false); // notice mobile
 
   const dropdownRef = useRef<HTMLLIElement | null>(null);
   const noticeDropdownRef = useRef<HTMLLIElement | null>(null);
@@ -42,9 +42,10 @@ export default function Navbar() {
   }, []);
 
   return (
-    <nav className="bg-white shadow-sm">
+    <nav className="bg-white shadow-sm relative z-30">
       <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 py-2 flex items-center justify-between">
-        <div className="font-semibold">{t("nav.menu")}</div>
+        {/* ✅ show only on mobile */}
+        <div className="font-semibold md:hidden">{t("nav.menu")}</div>
 
         {/* Mobile toggle */}
         <button
@@ -55,13 +56,13 @@ export default function Navbar() {
             setNoticeMenuOpen(false);
           }}
           aria-expanded={open}
+          aria-label="Toggle menu"
         >
           ☰
         </button>
 
         {/* Desktop menu */}
         <ul className="hidden md:flex items-center gap-5 text-sm">
-          {/* Home */}
           <li>
             <Link className="hover:text-sky-700" href="/">
               {t("nav.home")}
@@ -84,7 +85,7 @@ export default function Navbar() {
             </button>
 
             {noticeDropdownOpen && (
-              <div className="absolute left-0 top-full z-20 mt-2 w-52 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
+              <div className="absolute left-0 top-full z-40 mt-2 w-52 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
                 <Link
                   className="block px-3 py-2 text-sm hover:bg-slate-50"
                   href="/notices"
@@ -130,7 +131,8 @@ export default function Navbar() {
             </button>
 
             {dropdownOpen && (
-              <div className="absolute left-0 top-full z-20 mt-2 w-44 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
+              /* ✅ changed left-0 -> right-0 so it won’t clip on the right edge */
+              <div className="absolute right-0 top-full z-40 mt-2 w-44 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-black/10">
                 <Link
                   className="block px-3 py-2 text-sm hover:bg-slate-50"
                   href="/principal"
@@ -162,7 +164,6 @@ export default function Navbar() {
       {open && (
         <div className="md:hidden bg-white">
           <div className="mx-auto max-w-5xl px-4 py-2 text-sm flex flex-col gap-2">
-            {/* Home */}
             <Link className="py-1 hover:text-sky-700" href="/" onClick={() => setOpen(false)}>
               {t("nav.home")}
             </Link>
@@ -181,25 +182,16 @@ export default function Navbar() {
 
               {noticeMenuOpen && (
                 <div className="mt-1 pl-3 flex flex-col gap-1">
-                  <Link
-                    className="block py-1 hover:text-sky-700"
-                    href="/notices"
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link className="block py-1 hover:text-sky-700" href="/notices" onClick={() => setOpen(false)}>
                     {t("nav.notice_students")}
                   </Link>
-                  <Link
-                    className="block py-1 hover:text-sky-700"
-                    href="/office-noc"
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link className="block py-1 hover:text-sky-700" href="/office-noc" onClick={() => setOpen(false)}>
                     {t("nav.notice_office")}
                   </Link>
                 </div>
               )}
             </div>
 
-            {/* Other normal links */}
             {links
               .filter((l) => l.href !== "/")
               .map((l) => (
@@ -227,25 +219,13 @@ export default function Navbar() {
 
               {staffMenuOpen && (
                 <div className="mt-1 pl-3 flex flex-col gap-1">
-                  <Link
-                    className="block py-1 hover:text-sky-700"
-                    href="/principal"
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link className="block py-1 hover:text-sky-700" href="/principal" onClick={() => setOpen(false)}>
                     {t("nav.principal")}
                   </Link>
-                  <Link
-                    className="block py-1 hover:text-sky-700"
-                    href="/teachers"
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link className="block py-1 hover:text-sky-700" href="/teachers" onClick={() => setOpen(false)}>
                     {t("nav.teachers")}
                   </Link>
-                  <Link
-                    className="block py-1 hover:text-sky-700"
-                    href="/staffs"
-                    onClick={() => setOpen(false)}
-                  >
+                  <Link className="block py-1 hover:text-sky-700" href="/staffs" onClick={() => setOpen(false)}>
                     {t("nav.staffs")}
                   </Link>
                 </div>

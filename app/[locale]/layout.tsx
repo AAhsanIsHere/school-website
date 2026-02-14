@@ -7,6 +7,11 @@ import { getMessages, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 
+import TopBar from "@/components/TopBar";
+import SiteHeader from "@/components/SiteHeader";
+import Navbar from "@/components/Navbar";
+import Footer from "@/components/Footer";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -34,8 +39,8 @@ export default async function LocaleLayout({
 
   if (!routing.locales.includes(locale as any)) notFound();
 
-  // ✅ helps static rendering + tells next-intl the active locale
-setRequestLocale(locale);
+  // ✅ tells next-intl the active locale
+  setRequestLocale(locale);
 
   const messages = await getMessages();
 
@@ -43,7 +48,19 @@ setRequestLocale(locale);
     <html lang={locale}>
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <NextIntlClientProvider messages={messages}>
-          {children}
+          {/* ✅ Shared page shell for ALL pages */}
+          <div className="min-h-screen bg-slate-100 py-3 sm:py-6">
+            {/* IMPORTANT: no overflow-hidden here, otherwise dropdowns get clipped */}
+            <div className="mx-auto max-w-5xl rounded-2xl bg-white shadow-md">
+              <TopBar />
+              <SiteHeader />
+              <Navbar />
+
+              {children}
+
+              <Footer />
+            </div>
+          </div>
         </NextIntlClientProvider>
       </body>
     </html>

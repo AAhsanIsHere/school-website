@@ -21,7 +21,7 @@ export default function PrincipalPage() {
             <div className="grid grid-cols-1 gap-6 md:grid-cols-12">
               {/* Left: photo */}
               <div className="md:col-span-5">
-                <div className="relative overflow-hidden rounded-md border bg-slate-100 shadow-sm">
+                <div className="overflow-hidden rounded-xl bg-slate-100 ring-1 ring-black/5">
                   <Image
                     src="/principal.jpg"
                     alt={t("imageAlt")}

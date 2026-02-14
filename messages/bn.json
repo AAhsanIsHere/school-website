@@ -1,4 +1,13 @@
 {
+  "common": {
+    "pdf": "PDF",
+    "na": "N/A",
+    "downloadPdf": "PDF ডাউনলোড",
+    "backHome": "← হোমে ফিরে যান",
+    "loadMore": "আরও দেখুন",
+    "noMore": "আর কোনো নোটিশ নেই",
+    "emptyNotices": "কোনো নোটিশ পাওয়া যায়নি।"
+  },
   "topbar": {
     "login": "লগইন",
     "contact": "যোগাযোগ",
@@ -18,28 +27,37 @@
     "teachers": "শিক্ষকবৃন্দ",
     "staffs": "কর্মচারীবৃন্দ"
   },
-  "contact": {
-    "title": "যোগাযোগ",
-    "addressTitle": "ঠিকানা",
-    "name": "নাম",
-    "email": "ই-মেইল",
-    "subject": "বিষয়",
-    "phone": "ফোন",
-    "message": "বার্তা",
-    "submit": "জমা দিন",
-    "success": "ধন্যবাদ! আপনার বার্তা গ্রহণ করা হয়েছে।"
+  "siteHeader": {
+    "homeAria": "হোমে ফিরে যান",
+    "logoAlt": "কলেজ লোগো",
+    "rightLogoAlt": "লোগো",
+    "title": "শহীদ বুলবুল সরকারি কলেজ, পাবনা",
+    "subtitle": "অফিসিয়াল ওয়েবসাইট"
+  },
+  "home": {
+    "principalTitle": "অধ্যক্ষ",
+    "principalMessage": "এখানে অধ্যক্ষের সংক্ষিপ্ত বার্তা থাকবে…"
+  },
+  "latestNotice": {
+    "label": "কলেজের কার্যক্রম সর্বশেষ",
+    "prev": "আগেরটি",
+    "next": "পরেরটি"
+  },
+  "noticeTable": {
+    "title": "বিজ্ঞপ্তি",
+    "th": {
+      "sl": "#",
+      "date": "তারিখ",
+      "title": "শিরোনাম",
+      "download": "ডাউনলোড"
+    },
+    "allBtn": "সকল নোটিশ"
   },
   "notices": {
     "studentsTitle": "নোটিশ (শিক্ষার্থীদের জন্য)",
     "sectionTitle": "নোটিশ",
     "all": "সকল",
     "categoryLabel": "ক্যাটাগরি:",
-    "downloadPdf": "PDF ডাউনলোড",
-    "empty": "কোনো নোটিশ পাওয়া যায়নি।",
-    "loadMore": "LOAD MORE",
-    "noMore": "আর কোনো নোটিশ নেই",
-    "na": "N/A",
-    "backHome": "← হোমে ফিরে যান",
     "th": {
       "sl": "ক্রমিক",
       "date": "তারিখ",
@@ -58,16 +76,24 @@
   "officeNoc": {
     "title": "অফিস NOC",
     "listTitle": "অফিস NOC তালিকা",
-    "downloadPdf": "PDF ডাউনলোড",
     "empty": "কোনো অফিস NOC পাওয়া যায়নি।",
-    "na": "N/A",
-    "backHome": "← হোমে ফিরে যান",
     "th": {
       "sl": "ক্রমিক",
       "date": "তারিখ",
       "title": "শিরোনাম",
       "download": "ডাউনলোড"
     }
+  },
+  "contact": {
+    "title": "যোগাযোগ",
+    "addressTitle": "ঠিকানা",
+    "name": "নাম",
+    "email": "ই-মেইল",
+    "subject": "বিষয়",
+    "phone": "ফোন",
+    "message": "বার্তা",
+    "submit": "জমা দিন",
+    "success": "ধন্যবাদ! আপনার বার্তা গ্রহণ করা হয়েছে।"
   },
   "principal": {
     "imageAlt": "অধ্যক্ষ",
@@ -78,19 +104,15 @@
     "p3": "আপনি চাইলে এই লেখা ২–৩টা অনুচ্ছেদে ভাগ করে দিতে পারেন, যেমন ছবির ডান পাশে দেখা যাচ্ছে।",
     "note": "(নোট: আমি এখন placeholder টেক্সট দিলাম—আপনি আপনার আসল লেখা এখানে বসিয়ে দিবেন।)"
   },
-  "staffsPage": {
-    "title": "কর্মচারীবৃন্দ",
-    "placeholderName": "কর্মচারীর নাম {n}",
-    "placeholderTitle": "পদবি"
-  },
   "teachersPage": {
     "title": "শিক্ষকবৃন্দ",
     "placeholderName": "শিক্ষকের নাম {n}",
     "placeholderTitle": "পদবি"
   },
-  "home": {
-    "principalTitle": "অধ্যক্ষ",
-    "principalMessage": "এখানে অধ্যক্ষের সংক্ষিপ্ত বার্তা থাকবে…"
+  "staffsPage": {
+    "title": "কর্মচারীবৃন্দ",
+    "placeholderName": "কর্মচারীর নাম {n}",
+    "placeholderTitle": "পদবি"
   },
   "footer": {
     "collegeTitle": "কলেজ",
@@ -104,25 +126,6 @@
     "copyrightTitle": "কপিরাইট",
     "siteName": "স্কুল ওয়েবসাইট"
   },
-  "latestNotice": {
-    "label": "কলেজের কার্যক্রম সর্বশেষ",
-    "empty": "কোনো নোটিশ নেই",
-    "prev": "আগেরটি",
-    "next": "পরেরটি"
-  },
-  "noticeTable": {
-    "title": "বিজ্ঞপ্তি",
-    "th": {
-      "sl": "#",
-      "date": "তারিখ",
-      "title": "শিরোনাম",
-      "download": "ডাউনলোড"
-    },
-    "pdf": "PDF",
-    "na": "N/A",
-    "empty": "কোনো নোটিশ পাওয়া যায়নি।",
-    "allBtn": "সকল নোটিশ"
-  },
   "sidebarLinks": {
     "title": "গুরুত্বপূর্ণ লিংক",
     "items": {
@@ -131,12 +134,5 @@
       "l3": "গুরুত্বপূর্ণ লিংক ৩",
       "l4": "গুরুত্বপূর্ণ লিংক ৪"
     }
-  },
-  "siteHeader": {
-  "homeAria": "হোমে ফিরে যান",
-  "logoAlt": "কলেজ লোগো",
-  "rightLogoAlt": "লোগো",
-  "title": "শহীদ বুলবুল সরকারি কলেজ, পাবনা",
-  "subtitle": "অফিসিয়াল ওয়েবসাইট"
-}
+  }
 }

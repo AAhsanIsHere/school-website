@@ -14,6 +14,7 @@ function formatDateShort(iso: string) {
 
 export default function NoticeTable() {
   const t = useTranslations("noticeTable");
+  const c = useTranslations("common");
 
   const rows: Notice[] = [...studentNotices]
     .sort((a, b) => b.date.localeCompare(a.date))
@@ -56,10 +57,10 @@ export default function NoticeTable() {
                       rel="noreferrer"
                       className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
                     >
-                      {t("pdf")}
+                      {c("pdf")}
                     </a>
                   ) : (
-                    <span className="text-xs text-slate-400">{t("na")}</span>
+                    <span className="text-xs text-slate-400">{c("na")}</span>
                   )}
                 </td>
               </tr>
@@ -68,7 +69,7 @@ export default function NoticeTable() {
             {rows.length === 0 && (
               <tr>
                 <td colSpan={4} className="p-6 text-center text-slate-600">
-                  {t("empty")}
+                  {c("empty")}
                 </td>
               </tr>
             )}

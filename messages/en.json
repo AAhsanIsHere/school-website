@@ -1,10 +1,18 @@
 {
+  "common": {
+    "pdf": "PDF",
+    "na": "N/A",
+    "downloadPdf": "Download PDF",
+    "backHome": "← Back to home",
+    "loadMore": "LOAD MORE",
+    "noMore": "No more notices",
+    "emptyNotices": "No notices found."
+  },
   "topbar": {
     "login": "Login",
     "contact": "Contact",
     "lang": "বাংলা",
     "switchAria": "Switch language"
-
   },
   "nav": {
     "menu": "Menu",
@@ -19,28 +27,37 @@
     "teachers": "Teachers",
     "staffs": "Employees"
   },
-  "contact": {
-    "title": "Contact",
-    "addressTitle": "Address",
-    "name": "Name",
-    "email": "Email",
-    "subject": "Subject",
-    "phone": "Phone",
-    "message": "Message",
-    "submit": "Submit",
-    "success": "Thanks! Your message has been received."
+  "siteHeader": {
+    "homeAria": "Go back to home",
+    "logoAlt": "College logo",
+    "rightLogoAlt": "Logo",
+    "title": "Shahid Bulbul Government College, Pabna",
+    "subtitle": "Official Website"
+  },
+  "home": {
+    "principalTitle": "Principal",
+    "principalMessage": "A short message from the principal will appear here…"
+  },
+  "latestNotice": {
+    "label": "Latest Updates",
+    "prev": "Previous",
+    "next": "Next"
+  },
+  "noticeTable": {
+    "title": "Notices",
+    "th": {
+      "sl": "#",
+      "date": "Date",
+      "title": "Title",
+      "download": "Download"
+    },
+    "allBtn": "All notices"
   },
   "notices": {
     "studentsTitle": "Student Notices",
     "sectionTitle": "Notices",
     "all": "All",
     "categoryLabel": "Category:",
-    "downloadPdf": "Download PDF",
-    "empty": "No notices found.",
-    "loadMore": "LOAD MORE",
-    "noMore": "No more notices",
-    "na": "N/A",
-    "backHome": "← Back to home",
     "th": {
       "sl": "SL",
       "date": "Date",
@@ -59,16 +76,24 @@
   "officeNoc": {
     "title": "Office NOC",
     "listTitle": "Office NOC List",
-    "downloadPdf": "Download PDF",
     "empty": "No office NOC found.",
-    "na": "N/A",
-    "backHome": "← Back to home",
     "th": {
       "sl": "SL",
       "date": "Date",
       "title": "Title",
       "download": "Download"
     }
+  },
+  "contact": {
+    "title": "Contact",
+    "addressTitle": "Address",
+    "name": "Name",
+    "email": "Email",
+    "subject": "Subject",
+    "phone": "Phone",
+    "message": "Message",
+    "submit": "Submit",
+    "success": "Thanks! Your message has been received."
   },
   "principal": {
     "imageAlt": "Principal",
@@ -79,19 +104,15 @@
     "p3": "You can split this content into 2–3 paragraphs, similar to the layout shown beside the photo.",
     "note": "(Note: This is placeholder text—replace it with your real content.)"
   },
-  "staffsPage": {
-    "title": "Employees",
-    "placeholderName": "Employee {n}",
-    "placeholderTitle": "Position"
-  },
   "teachersPage": {
     "title": "Teachers",
     "placeholderName": "Teacher {n}",
     "placeholderTitle": "Position"
   },
-  "home": {
-    "principalTitle": "Principal",
-    "principalMessage": "A short message from the principal will appear here…"
+  "staffsPage": {
+    "title": "Employees",
+    "placeholderName": "Employee {n}",
+    "placeholderTitle": "Position"
   },
   "footer": {
     "collegeTitle": "College",
@@ -105,25 +126,6 @@
     "copyrightTitle": "Copyright",
     "siteName": "School Website"
   },
-  "latestNotice": {
-    "label": "Latest Updates",
-    "empty": "No notices",
-    "prev": "Previous",
-    "next": "Next"
-  },
-  "noticeTable": {
-    "title": "Notices",
-    "th": {
-      "sl": "#",
-      "date": "Date",
-      "title": "Title",
-      "download": "Download"
-    },
-    "pdf": "PDF",
-    "na": "N/A",
-    "empty": "No notices found.",
-    "allBtn": "All notices"
-  },
   "sidebarLinks": {
     "title": "Important Links",
     "items": {
@@ -132,12 +134,5 @@
       "l3": "Important Link 3",
       "l4": "Important Link 4"
     }
-  },
-  "siteHeader": {
-  "homeAria": "Go back to home",
-  "logoAlt": "College logo",
-  "rightLogoAlt": "Logo",
-  "title": "Shahid Bulbul Government College, Pabna",
-  "subtitle": "Official Website"
-}
+  }
 }

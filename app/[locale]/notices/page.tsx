@@ -20,8 +20,13 @@ function formatDateShort(iso: string) {
   });
 }
 
-function RowMenu({ fileUrl }: { fileUrl?: string }) {
-  const t = useTranslations();
+function RowMenu({
+  fileUrl,
+  downloadLabel
+}: {
+  fileUrl?: string;
+  downloadLabel: string;
+}) {
   const [open, setOpen] = useState(false);
   const disabled = !fileUrl;
 
@@ -63,7 +68,7 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
               role="menuitem"
               onClick={() => setOpen(false)}
             >
-              {t("notices.downloadPdf")}
+              {downloadLabel}
             </a>
           </div>
         </>
@@ -73,15 +78,14 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
 }
 
 export default function NoticesPage() {
-  const t = useTranslations();
+  const t = useTranslations("notices");
+  const c = useTranslations("common");
 
   const [category, setCategory] = useState<string>("ALL");
   const [visible, setVisible] = useState<number>(10);
 
-  // Stored category values in Bangla (from data)
   const preferredOrderBn = ["পরীক্ষা", "ছুটি", "ক্লাস নোটিশ", "সাধারণ", "অন্যান্য"];
 
-  // Map stored Bangla categories -> translation keys
   const categoryKey = (bn: string) => {
     switch (bn) {
       case "পরীক্ষা":
@@ -102,13 +106,11 @@ export default function NoticesPage() {
   const getStudentCategoryBn = (n: Notice) =>
     String((n as any).studentCategory ?? "সাধারণ");
 
-  // Build dropdown categories from data
   const categoriesBn = useMemo(() => {
     const set = new Set<string>();
     for (const n of allNotices) set.add(getStudentCategoryBn(n));
 
     const list = Array.from(set);
-
     list.sort((a, b) => {
       const ia = preferredOrderBn.indexOf(a);
       const ib = preferredOrderBn.indexOf(b);
@@ -125,8 +127,6 @@ export default function NoticesPage() {
   const filtered = useMemo(() => {
     const sorted = [...allNotices].sort((a, b) => b.date.localeCompare(a.date));
     if (category === "ALL") return sorted;
-
-    // category is stored as Bangla label
     return sorted.filter((n) => getStudentCategoryBn(n) === category);
   }, [category]);
 
@@ -142,7 +142,7 @@ export default function NoticesPage() {
         <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
           <div className="py-4">
             <h1 className="text-2xl sm:text-3xl font-semibold">
-              {t("notices.studentsTitle")}
+              {t("studentsTitle")}
             </h1>
 
             <div className="mt-3 flex flex-wrap items-center gap-3">
@@ -154,19 +154,19 @@ export default function NoticesPage() {
                   setVisible(10);
                 }}
               >
-                <option value="ALL">{t("notices.all")}</option>
+                <option value="ALL">{t("all")}</option>
                 {categoriesBn.map((bn) => (
                   <option key={bn} value={bn}>
-                    {t(`notices.categories.${categoryKey(bn)}`)}
+                    {t(`categories.${categoryKey(bn)}`)}
                   </option>
                 ))}
               </select>
 
               {category !== "ALL" && (
                 <span className="text-xs text-slate-600">
-                  {t("notices.categoryLabel")}{" "}
+                  {t("categoryLabel")}{" "}
                   <span className="font-semibold">
-                    {t(`notices.categories.${categoryKey(category)}`)}
+                    {t(`categories.${categoryKey(category)}`)}
                   </span>
                 </span>
               )}
@@ -175,7 +175,7 @@ export default function NoticesPage() {
 
           <div className="overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-black/5">
             <div className="bg-sky-600 px-4 py-2 text-white font-semibold">
-              {t("notices.sectionTitle")}
+              {t("sectionTitle")}
             </div>
 
             {/* MOBILE */}
@@ -197,18 +197,18 @@ export default function NoticesPage() {
                       </div>
 
                       <div className="mt-1 text-[11px] text-slate-600">
-                        {t(`notices.categories.${categoryKey(catBn)}`)}
+                        {t(`categories.${categoryKey(catBn)}`)}
                       </div>
                     </div>
 
-                    <RowMenu fileUrl={n.fileUrl} />
+                    <RowMenu fileUrl={n.fileUrl} downloadLabel={c("downloadPdf")} />
                   </div>
                 );
               })}
 
               {shown.length === 0 && (
                 <div className="p-6 text-center text-slate-600">
-                  {t("notices.empty")}
+                  {c("emptyNotices")}
                 </div>
               )}
             </div>
@@ -218,17 +218,11 @@ export default function NoticesPage() {
               <table className="w-full text-sm">
                 <thead className="bg-slate-50 text-slate-700">
                   <tr className="border-b">
-                    <th className="p-2 text-center w-16">{t("notices.th.sl")}</th>
-                    <th className="p-2 text-left w-28">{t("notices.th.date")}</th>
-                    <th className="p-2 text-left min-w-[240px]">
-                      {t("notices.th.title")}
-                    </th>
-                    <th className="p-2 text-left w-32">
-                      {t("notices.th.category")}
-                    </th>
-                    <th className="p-2 text-center w-28">
-                      {t("notices.th.download")}
-                    </th>
+                    <th className="p-2 text-center w-16">{t("th.sl")}</th>
+                    <th className="p-2 text-left w-28">{t("th.date")}</th>
+                    <th className="p-2 text-left min-w-[240px]">{t("th.title")}</th>
+                    <th className="p-2 text-left w-32">{t("th.category")}</th>
+                    <th className="p-2 text-center w-28">{t("th.download")}</th>
                   </tr>
                 </thead>
 
@@ -237,20 +231,14 @@ export default function NoticesPage() {
                     const catBn = getStudentCategoryBn(n);
                     return (
                       <tr key={n.id} className="hover:bg-slate-50">
-                        <td className="p-2 text-center text-slate-700">
-                          {idx + 1}
-                        </td>
-
+                        <td className="p-2 text-center text-slate-700">{idx + 1}</td>
                         <td className="p-2 text-slate-700 whitespace-nowrap">
                           {formatDateShort(n.date)}
                         </td>
-
                         <td className="p-2 text-slate-900">{n.title}</td>
-
                         <td className="p-2 text-slate-700">
-                          {t(`notices.categories.${categoryKey(catBn)}`)}
+                          {t(`categories.${categoryKey(catBn)}`)}
                         </td>
-
                         <td className="p-2 text-center">
                           {n.fileUrl ? (
                             <a
@@ -259,12 +247,10 @@ export default function NoticesPage() {
                               rel="noreferrer"
                               className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
                             >
-                              PDF
+                              {c("pdf")}
                             </a>
                           ) : (
-                            <span className="text-xs text-slate-400">
-                              {t("notices.na")}
-                            </span>
+                            <span className="text-xs text-slate-400">{c("na")}</span>
                           )}
                         </td>
                       </tr>
@@ -274,7 +260,7 @@ export default function NoticesPage() {
                   {shown.length === 0 && (
                     <tr>
                       <td className="p-6 text-center text-slate-600" colSpan={5}>
-                        {t("notices.empty")}
+                        {c("emptyNotices")}
                       </td>
                     </tr>
                   )}
@@ -288,17 +274,17 @@ export default function NoticesPage() {
                   onClick={() => setVisible((v) => v + 10)}
                   className="rounded bg-sky-600 px-6 py-2 text-sm font-semibold text-white hover:bg-sky-700"
                 >
-                  {t("notices.loadMore")}
+                  {c("loadMore")}
                 </button>
               ) : (
-                <span className="text-xs text-slate-500">{t("notices.noMore")}</span>
+                <span className="text-xs text-slate-500">{c("noMore")}</span>
               )}
             </div>
           </div>
 
           <div className="mt-4">
             <Link className="text-sm text-sky-700 hover:underline" href="/">
-              {t("notices.backHome")}
+              {c("backHome")}
             </Link>
           </div>
         </main>

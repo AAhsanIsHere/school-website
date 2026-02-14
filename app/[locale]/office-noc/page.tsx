@@ -21,7 +21,7 @@ function formatDateShort(iso: string) {
 }
 
 function RowMenu({ fileUrl }: { fileUrl?: string }) {
-  const t = useTranslations("officeNoc");
+  const c = useTranslations("common");
   const [open, setOpen] = useState(false);
   const disabled = !fileUrl;
 
@@ -63,7 +63,7 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
               role="menuitem"
               onClick={() => setOpen(false)}
             >
-              {t("downloadPdf")}
+              {c("downloadPdf")}
             </a>
           </div>
         </>
@@ -74,6 +74,7 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
 
 export default function OfficeNocPage() {
   const t = useTranslations("officeNoc");
+  const c = useTranslations("common");
 
   const sorted = useMemo(
     () => [...allNotices].sort((a, b) => (a.date < b.date ? 1 : -1)),
@@ -117,9 +118,7 @@ export default function OfficeNocPage() {
               ))}
 
               {sorted.length === 0 && (
-                <div className="p-6 text-center text-slate-600">
-                  {t("empty")}
-                </div>
+                <div className="p-6 text-center text-slate-600">{t("empty")}</div>
               )}
             </div>
 
@@ -138,13 +137,14 @@ export default function OfficeNocPage() {
                 <tbody className="divide-y">
                   {sorted.map((n: Notice, idx: number) => (
                     <tr key={n.id} className="hover:bg-slate-50">
-                      <td className="p-2 text-center text-slate-700">
-                        {idx + 1}
-                      </td>
+                      <td className="p-2 text-center text-slate-700">{idx + 1}</td>
+
                       <td className="p-2 text-slate-700 whitespace-nowrap">
                         {formatDateShort(n.date)}
                       </td>
+
                       <td className="p-2 text-slate-900">{n.title}</td>
+
                       <td className="p-2 text-center">
                         {n.fileUrl ? (
                           <a
@@ -153,12 +153,10 @@ export default function OfficeNocPage() {
                             rel="noreferrer"
                             className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
                           >
-                            PDF
+                            {c("pdf")}
                           </a>
                         ) : (
-                          <span className="text-xs text-slate-400">
-                            {t("na")}
-                          </span>
+                          <span className="text-xs text-slate-400">{c("na")}</span>
                         )}
                       </td>
                     </tr>
@@ -178,7 +176,7 @@ export default function OfficeNocPage() {
 
           <div className="mt-4">
             <Link className="text-sm text-sky-700 hover:underline" href="/">
-              {t("backHome")}
+              {c("backHome")}
             </Link>
           </div>
         </main>

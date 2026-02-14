@@ -17,6 +17,7 @@ function formatDateShort(iso: string) {
 
 export default function LatestNoticeSlider() {
   const t = useTranslations("latestNotice");
+  const c = useTranslations("common");
 
   const items = useMemo(() => {
     return [...studentNotices].sort((a, b) => b.date.localeCompare(a.date));
@@ -80,7 +81,7 @@ export default function LatestNoticeSlider() {
               )}
             </div>
           ) : (
-            <span className="text-slate-500">{t("empty")}</span>
+            <span className="text-slate-500">{c("emptyNotices")}</span>
           )}
         </div>
 
