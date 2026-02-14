@@ -9,8 +9,8 @@ export default function HeroImageSlider() {
   const slides: Slide[] = useMemo(
     () => [
       { id: "p1", src: "/slider/1.jpg", alt: "School photo 1" },
-      { id: "p2", src: "/slider/2.jpg", alt: "School photo 2" },
-      { id: "p3", src: "/slider/3.jpg", alt: "School photo 3" },
+      { id: "p2", src: "/slider/2.png", alt: "School photo 2" },
+      { id: "p3", src: "/slider/3.webp", alt: "School photo 3" },
     ],
     []
   );
