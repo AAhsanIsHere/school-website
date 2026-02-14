@@ -134,5 +134,24 @@
       "l3": "Important Link 3",
       "l4": "Important Link 4"
     }
+  },
+  "login": {
+  "title": "Login",
+  "subtitle": "For admin/office users.",
+  "usernameLabel": "Username / Email",
+  "usernamePlaceholder": "admin@example.com",
+  "passwordLabel": "Password",
+  "passwordPlaceholder": "••••••••",
+  "show": "Show",
+  "hide": "Hide",
+  "submit": "Sign in",
+  "submitting": "Signing in...",
+  "backHome": "← Back to home",
+  "help": "Help/Contact",
+  "errors": {
+    "missingFields": "Enter username/email and password.",
+    "failed": "Login failed. Please try again."
   }
+}
+
 }

@@ -134,5 +134,24 @@
       "l3": "গুরুত্বপূর্ণ লিংক ৩",
       "l4": "গুরুত্বপূর্ণ লিংক ৪"
     }
+  },
+  "login": {
+  "title": "লগইন",
+  "subtitle": "অ্যাডমিন/অফিস ব্যবহারকারীদের জন্য।",
+  "usernameLabel": "ইউজারনেম / ইমেইল",
+  "usernamePlaceholder": "admin@example.com",
+  "passwordLabel": "পাসওয়ার্ড",
+  "passwordPlaceholder": "••••••••",
+  "show": "Show",
+  "hide": "Hide",
+  "submit": "লগইন করুন",
+  "submitting": "লগইন হচ্ছে...",
+  "backHome": "← হোমে ফিরে যান",
+  "help": "সাহায্য/যোগাযোগ",
+  "errors": {
+    "missingFields": "ইউজারনেম/ইমেইল এবং পাসওয়ার্ড দিন।",
+    "failed": "লগইন ব্যর্থ হয়েছে। আবার চেষ্টা করুন।"
   }
+}
+
 }

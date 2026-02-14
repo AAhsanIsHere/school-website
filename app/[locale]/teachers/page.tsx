@@ -1,11 +1,6 @@
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 
-import TopBar from "@/components/TopBar";
-import SiteHeader from "@/components/SiteHeader";
-import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-
 const teacherIds = [1, 2, 3, 4];
 
 function PersonCard({
@@ -29,7 +24,7 @@ function PersonCard({
         />
       </div>
 
-      <div className="mt-3 font-semibold text-sm">{name}</div>
+      <div className="mt-3 text-sm font-semibold">{name}</div>
       <div className="text-xs text-slate-600">{title}</div>
     </div>
   );
@@ -39,31 +34,21 @@ export default function TeachersPage() {
   const t = useTranslations("teachersPage");
 
   return (
-    <div className="min-h-screen bg-slate-100 py-3 sm:py-6">
-      <div className="mx-auto max-w-5xl overflow-hidden rounded-2xl bg-white shadow-md">
-        <TopBar />
-        <SiteHeader />
-        <Navbar />
+    <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
+      <section className="mx-auto max-w-5xl">
+        <h1 className="mb-6 text-2xl font-semibold sm:text-3xl">{t("title")}</h1>
 
-        <main className="bg-slate-50 px-4 py-6 sm:px-6 lg:px-8">
-          <h1 className="text-2xl sm:text-3xl font-semibold mb-6">
-            {t("title")}
-          </h1>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {teacherIds.map((n) => (
-              <PersonCard
-                key={n}
-                name={t("placeholderName", { n })}
-                title={t("placeholderTitle")}
-                img="/placeholder-person.png"
-              />
-            ))}
-          </div>
-        </main>
-
-        <Footer />
-      </div>
-    </div>
+        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          {teacherIds.map((n) => (
+            <PersonCard
+              key={n}
+              name={t("placeholderName", { n })}
+              title={t("placeholderTitle")}
+              img="/placeholder-person.png"
+            />
+          ))}
+        </div>
+      </section>
+    </main>
   );
 }
