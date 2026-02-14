@@ -1,89 +1,122 @@
-import { useTranslations } from "next-intl";
-import { Link } from "@/i18n/navigation";
+"use client";
 
+import { useEffect, useMemo, useState } from "react";
+import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
 import { studentNotices, type Notice } from "@/lib/notices";
 
-function formatDateShort(iso: string) {
-  const d = new Date(iso + "T00:00:00");
-  return d.toLocaleDateString("en-GB", {
-    day: "2-digit",
-    month: "short",
-    year: "2-digit",
-  });
+function normalizeUrl(url?: string) {
+  const u = (url ?? "").trim();
+  if (!u || u === "#") return "";
+  return u;
 }
 
-export default function NoticeTable() {
-  const t = useTranslations("noticeTable");
-  const c = useTranslations("common");
+function filenameFromUrl(url: string) {
+  try {
+    const clean = url.split("#")[0].split("?")[0];
+    const last = clean.substring(clean.lastIndexOf("/") + 1);
+    return last || "notice.pdf";
+  } catch {
+    return "notice.pdf";
+  }
+}
 
-  const rows: Notice[] = [...studentNotices]
-    .sort((a, b) => b.date.localeCompare(a.date))
-    .slice(0, 6);
+function isSameOrigin(url: string) {
+  // same-origin = files in /public or your own domain routes
+  return url.startsWith("/");
+}
+
+export default function LatestNoticeSlider() {
+  const t = useTranslations("latestNotice");
+
+  const items: Notice[] = useMemo(() => {
+    return [...studentNotices]
+      .sort((a, b) => b.date.localeCompare(a.date))
+      .slice(0, 10);
+  }, []);
+
+  const [idx, setIdx] = useState(0);
+
+  useEffect(() => {
+    if (items.length <= 1) return;
+    const id = setInterval(() => setIdx((p) => (p + 1) % items.length), 6000);
+    return () => clearInterval(id);
+  }, [items.length]);
+
+  if (items.length === 0) return null;
+
+  const current = items[idx];
+  const fileUrl = normalizeUrl(current.fileUrl);
+  const hasFile = !!fileUrl;
+
+  const prev = () => setIdx((p) => (p - 1 + items.length) % items.length);
+  const next = () => setIdx((p) => (p + 1) % items.length);
 
   return (
-    <div className="rounded-xl bg-[color:var(--surface)] shadow-sm ring-1 ring-black/5 overflow-hidden">
-      {/* Title */}
-      <div className="px-3 pt-3">
-        <div className="flex items-center gap-2">
-          <span className="h-4 w-[3px] bg-sky-600" />
-          <h2 className="text-lg font-semibold">{t("title")}</h2>
+    <div className="w-full overflow-hidden rounded-md border border-[color:var(--border)] bg-[var(--bg-card)] shadow-[var(--shadow-card)]">      <div className="flex items-center">
+        {/* Left label */}
+        <div className="shrink-0 bg-sky-600 px-4 py-2 text-sm font-semibold text-white">
+          {t("label")}
         </div>
-      </div>
 
-      <div className="mt-3 overflow-x-auto">
-        <table className="w-full text-sm">
-          <thead className="bg-sky-600 text-white">
-            <tr>
-              <th className="p-2 text-center w-12">{t("th.sl")}</th>
-              <th className="p-2 text-left w-28">{t("th.date")}</th>
-              <th className="p-2 text-left">{t("th.title")}</th>
-              <th className="p-2 text-center w-24">{t("th.download")}</th>
-            </tr>
-          </thead>
+        {/* Middle text (OPEN in new tab) */}
+        <div className="min-w-0 flex-1 px-4 py-2">
+          {hasFile ? (
+            <a
+              href={fileUrl}
+              target="_blank"
+              rel="noreferrer"
+              className="block truncate text-sm text-[var(--text-main)] hover:underline"
+              title={current.title}
+            >
+              {current.title}
+            </a>
+          ) : (
+            <Link
+              href="/notices"
+              className="block truncate text-sm text-[var(--text-main)] hover:underline"
+              title={current.title}
+            >
+              {current.title}
+            </Link>
+          )}
+        </div>
 
-          <tbody className="divide-y divide-black/10">
-            {rows.map((n, i) => (
-              <tr key={n.id} className="hover:bg-black/5">
-                <td className="p-2 text-center">{i + 1}</td>
-                <td className="p-2 whitespace-nowrap">{formatDateShort(n.date)}</td>
-                <td className="p-2">{n.title}</td>
+        {/* Right controls */}
+        <div className="flex shrink-0 items-stretch border-l border-[color:var(--border)]">
+          {/* DOWNLOAD button (separate) */}
+          {hasFile && (
+            <a
+              href={fileUrl}
+              // download works reliably only for same-origin files
+              download={isSameOrigin(fileUrl) ? filenameFromUrl(fileUrl) : undefined}
+              className="inline-flex items-center justify-center bg-red-600 px-3 text-[11px] font-bold text-white hover:bg-red-700"
+              title="PDF"
+            >
+              PDF
+            </a>
+          )}
 
-                <td className="p-2 text-center">
-                  {n.fileUrl ? (
-                    <a
-                      href={n.fileUrl}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
-                    >
-                      {c("pdf")}
-                    </a>
-                  ) : (
-                    <span className="text-xs opacity-60">{c("na")}</span>
-                  )}
-                </td>
-              </tr>
-            ))}
+          <button
+            type="button"
+            onClick={prev}
+            className="px-3 py-2 text-[var(--text-main)] hover:bg-[var(--bg-main)]"
+            aria-label={t("prev")}
+            title={t("prev")}
+          >
+            ‹
+          </button>
 
-            {rows.length === 0 && (
-              <tr>
-                <td colSpan={4} className="p-6 text-center opacity-70">
-                  {c("empty")}
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-
-      {/* Bottom button */}
-      <div className="p-4 flex justify-center">
-        <Link
-          href="/notices"
-          className="rounded bg-sky-600 px-8 py-2 text-sm font-semibold text-white hover:bg-sky-700"
-        >
-          {t("allBtn")}
-        </Link>
+          <button
+            type="button"
+            onClick={next}
+            className="px-3 py-2 text-[var(--text-main)] hover:bg-[var(--bg-main)]"
+            aria-label={t("next")}
+            title={t("next")}
+          >
+            ›
+          </button>
+        </div>
       </div>
     </div>
   );

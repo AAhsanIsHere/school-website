@@ -9,11 +9,11 @@ import { studentNotices as allNotices, type Notice } from "@/lib/notices";
 const preferredOrderBn = ["পরীক্ষা", "ছুটি", "ক্লাস নোটিশ", "সাধারণ", "অন্যান্য"] as const;
 
 const categoryMap: Record<string, "exam" | "holiday" | "class" | "general" | "other"> = {
-  পরীক্ষা: "exam",
-  ছুটি: "holiday",
+  "পরীক্ষা": "exam",
+  "ছুটি": "holiday",
   "ক্লাস নোটিশ": "class",
-  সাধারণ: "general",
-  অন্যান্য: "other",
+  "সাধারণ": "general",
+  "অন্যান্য": "other",
 };
 
 function categoryKey(bn: string) {
@@ -25,9 +25,60 @@ function formatDateShort(iso: string) {
   return d.toLocaleDateString("en-GB", { day: "2-digit", month: "short", year: "2-digit" });
 }
 
+function normalizeUrl(url?: string) {
+  const u = (url ?? "").trim();
+  if (!u || u === "#") return "";
+  return u;
+}
+
+function filenameFromUrl(url: string) {
+  const clean = url.split("#")[0].split("?")[0];
+  const last = clean.substring(clean.lastIndexOf("/") + 1);
+  return last || "notice.pdf";
+}
+
+function isSameOrigin(url: string) {
+  return url.startsWith("/");
+}
+
+/** Desktop red PDF button (download when same-origin) */
+function DownloadButton({ url, label }: { url: string; label: string }) {
+  const safeUrl = normalizeUrl(url);
+  if (!safeUrl) return <span className="text-xs text-[color:var(--text-muted)]">N/A</span>;
+
+  return (
+    <a
+      href={safeUrl}
+      download={isSameOrigin(safeUrl) ? filenameFromUrl(safeUrl) : undefined}
+      className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+      title={label}
+      onClick={(e) => e.stopPropagation()}
+    >
+      PDF
+    </a>
+  );
+}
+
+/** Title opens (no download attribute) */
+function TitleLink({ title, url }: { title: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="hover:underline"
+      title={title}
+    >
+      {title}
+    </a>
+  );
+}
+
+/** Mobile triple-dot menu (download link inside) */
 function RowMenu({ fileUrl, downloadLabel }: { fileUrl?: string; downloadLabel: string }) {
   const [open, setOpen] = useState(false);
-  const disabled = !fileUrl;
+  const safeUrl = normalizeUrl(fileUrl);
+  const disabled = !safeUrl;
 
   return (
     <div className="relative inline-block">
@@ -55,14 +106,14 @@ function RowMenu({ fileUrl, downloadLabel }: { fileUrl?: string; downloadLabel: 
             aria-label="Close"
           />
 
+          {/* IMPORTANT: card wrapper must NOT be overflow-hidden, or menu will clip */}
           <div
-            className="absolute right-0 z-10 mt-2 w-44 overflow-hidden rounded-lg border bg-[color:var(--bg-card)] shadow-lg border-[color:var(--border)]"
+            className="absolute right-0 z-50 mt-2 w-44 overflow-hidden rounded-lg border bg-[color:var(--bg-card)] shadow-lg border-[color:var(--border)]"
             role="menu"
           >
             <a
-              href={fileUrl}
-              target="_blank"
-              rel="noreferrer"
+              href={safeUrl}
+              download={isSameOrigin(safeUrl) ? filenameFromUrl(safeUrl) : undefined}
               className="block px-3 py-2 text-sm text-[color:var(--text-main)] hover:bg-[color:var(--bg-main)]"
               role="menuitem"
               onClick={() => setOpen(false)}
@@ -94,7 +145,6 @@ export default function NoticesPage() {
     list.sort((a, b) => {
       const ia = preferredOrderBn.indexOf(a as any);
       const ib = preferredOrderBn.indexOf(b as any);
-
       if (ia !== -1 && ib !== -1) return ia - ib;
       if (ia !== -1) return -1;
       if (ib !== -1) return 1;
@@ -143,13 +193,16 @@ export default function NoticesPage() {
         </div>
       </div>
 
-      <div className="overflow-hidden rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">
+      {/* NOTE: do NOT use overflow-hidden here, or the mobile menu clips */}
+      <div className="rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">
         <div className="bg-sky-600 px-4 py-2 text-white font-semibold">{t("sectionTitle")}</div>
 
-        {/* MOBILE */}
+        {/* MOBILE: triple dot menu */}
         <div className="sm:hidden divide-y divide-[color:var(--border)]">
           {shown.map((n: Notice, idx: number) => {
             const catBn = getStudentCategoryBn(n);
+            const url = normalizeUrl(n.fileUrl);
+
             return (
               <div key={n.id} className="flex items-start justify-between gap-3 p-3">
                 <div className="min-w-0">
@@ -158,7 +211,7 @@ export default function NoticesPage() {
                   </div>
 
                   <div className="mt-1 font-medium leading-snug text-[color:var(--text-main)]">
-                    {n.title}
+                    {url ? <TitleLink title={n.title} url={url} /> : n.title}
                   </div>
 
                   <div className="mt-1 text-[11px] text-[color:var(--text-muted)]">
@@ -166,7 +219,11 @@ export default function NoticesPage() {
                   </div>
                 </div>
 
-                <RowMenu fileUrl={n.fileUrl} downloadLabel={c("downloadPdf")} />
+                {url ? (
+                  <RowMenu fileUrl={url} downloadLabel={c("downloadPdf")} />
+                ) : (
+                  <span className="text-xs text-[color:var(--text-muted)]">{c("na")}</span>
+                )}
               </div>
             );
           })}
@@ -176,7 +233,7 @@ export default function NoticesPage() {
           )}
         </div>
 
-        {/* DESKTOP/TABLET */}
+        {/* DESKTOP/TABLET: red download button */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-[color:var(--bg-main)] text-[color:var(--text-muted)]">
@@ -192,26 +249,26 @@ export default function NoticesPage() {
             <tbody className="divide-y divide-[color:var(--border)]">
               {shown.map((n: Notice, idx: number) => {
                 const catBn = getStudentCategoryBn(n);
+                const url = normalizeUrl(n.fileUrl);
+
                 return (
                   <tr key={n.id} className="hover:bg-[color:var(--bg-main)]">
                     <td className="p-2 text-center text-[color:var(--text-muted)]">{idx + 1}</td>
                     <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
                       {formatDateShort(n.date)}
                     </td>
-                    <td className="p-2 text-[color:var(--text-main)]">{n.title}</td>
+
+                    <td className="p-2 text-[color:var(--text-main)]">
+                      {url ? <TitleLink title={n.title} url={url} /> : n.title}
+                    </td>
+
                     <td className="p-2 text-[color:var(--text-muted)]">
                       {t(`categories.${categoryKey(catBn)}`)}
                     </td>
+
                     <td className="p-2 text-center">
-                      {n.fileUrl ? (
-                        <a
-                          href={n.fileUrl}
-                          target="_blank"
-                          rel="noreferrer"
-                          className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
-                        >
-                          {c("pdf")}
-                        </a>
+                      {url ? (
+                        <DownloadButton url={url} label={c("downloadPdf")} />
                       ) : (
                         <span className="text-xs text-[color:var(--text-muted)]">{c("na")}</span>
                       )}

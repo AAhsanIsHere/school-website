@@ -15,10 +15,60 @@ function formatDateShort(iso: string) {
   });
 }
 
+function normalizeUrl(url?: string) {
+  const u = (url ?? "").trim();
+  if (!u || u === "#") return "";
+  return u;
+}
+
+function isSameOrigin(url: string) {
+  return url.startsWith("/"); // files in /public
+}
+
+function filenameFromUrl(url: string) {
+  const clean = url.split("#")[0].split("?")[0];
+  const last = clean.substring(clean.lastIndexOf("/") + 1);
+  return last || "notice.pdf";
+}
+
+/** Title opens (not download) */
+function TitleLink({ title, url }: { title: string; url: string }) {
+  return (
+    <a
+      href={url}
+      target="_blank"
+      rel="noreferrer"
+      className="hover:underline"
+      title={title}
+    >
+      {title}
+    </a>
+  );
+}
+
+/** Desktop red button: download (same-origin), otherwise open */
+function DownloadPdfButton({ url, label }: { url: string; label: string }) {
+  const same = isSameOrigin(url);
+
+  return (
+    <a
+      href={url}
+      {...(same ? { download: filenameFromUrl(url) } : { target: "_blank", rel: "noreferrer" })}
+      className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
+      title={label}
+    >
+      PDF
+    </a>
+  );
+}
+
+/** Mobile ⋮ menu */
 function RowMenu({ fileUrl }: { fileUrl?: string }) {
   const c = useTranslations("common");
   const [open, setOpen] = useState(false);
-  const disabled = !fileUrl;
+
+  const url = normalizeUrl(fileUrl);
+  const disabled = !url;
 
   return (
     <div className="relative inline-block">
@@ -51,9 +101,10 @@ function RowMenu({ fileUrl }: { fileUrl?: string }) {
             role="menu"
           >
             <a
-              href={fileUrl}
-              target="_blank"
-              rel="noreferrer"
+              href={url}
+              {...(isSameOrigin(url)
+                ? { download: filenameFromUrl(url) }
+                : { target: "_blank", rel: "noreferrer" })}
               className="block px-3 py-2 text-sm text-[color:var(--text-main)] hover:bg-[color:var(--bg-main)]"
               role="menuitem"
               onClick={() => setOpen(false)}
@@ -82,35 +133,36 @@ export default function OfficeNocPage() {
         <h1 className="text-2xl sm:text-3xl font-semibold">{t("title")}</h1>
       </div>
 
-      <div className="overflow-hidden rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">
-        <div className="bg-sky-600 px-4 py-2 text-white font-semibold">
-          {t("listTitle")}
-        </div>
+      <div className="rounded-xl border bg-[color:var(--bg-card)] border-[color:var(--border)] shadow-sm">        <div className="bg-sky-600 px-4 py-2 text-white font-semibold">{t("listTitle")}</div>
 
-        {/* Mobile */}
+        {/* ✅ MOBILE: show ⋮ menu */}
         <div className="sm:hidden divide-y divide-[color:var(--border)]">
-          {sorted.map((n: Notice, idx: number) => (
-            <div key={n.id} className="flex items-start justify-between gap-3 p-3">
-              <div className="min-w-0">
-                <div className="text-xs text-[color:var(--text-muted)]">
-                  {idx + 1}. {formatDateShort(n.date)}
+          {sorted.map((n: Notice, idx: number) => {
+            const url = normalizeUrl(n.fileUrl);
+
+            return (
+              <div key={n.id} className="flex items-start justify-between gap-3 p-3">
+                <div className="min-w-0">
+                  <div className="text-xs text-[color:var(--text-muted)]">
+                    {idx + 1}. {formatDateShort(n.date)}
+                  </div>
+
+                  <div className="mt-1 font-medium leading-snug text-[color:var(--text-main)]">
+                    {url ? <TitleLink title={n.title} url={url} /> : n.title}
+                  </div>
                 </div>
-                <div className="mt-1 font-medium leading-snug text-[color:var(--text-main)]">
-                  {n.title}
-                </div>
+
+                <RowMenu fileUrl={n.fileUrl} />
               </div>
-              <RowMenu fileUrl={n.fileUrl} />
-            </div>
-          ))}
+            );
+          })}
 
           {sorted.length === 0 && (
-            <div className="p-6 text-center text-[color:var(--text-muted)]">
-              {t("empty")}
-            </div>
+            <div className="p-6 text-center text-[color:var(--text-muted)]">{t("empty")}</div>
           )}
         </div>
 
-        {/* Desktop */}
+        {/* ✅ PC/TABLET: NO ⋮ menu, direct red PDF button */}
         <div className="hidden sm:block overflow-x-auto">
           <table className="w-full text-sm">
             <thead className="bg-[color:var(--bg-main)] text-[color:var(--text-muted)]">
@@ -123,36 +175,33 @@ export default function OfficeNocPage() {
             </thead>
 
             <tbody className="divide-y divide-[color:var(--border)]">
-              {sorted.map((n: Notice, idx: number) => (
-                <tr key={n.id} className="hover:bg-[color:var(--bg-main)]">
-                  <td className="p-2 text-center text-[color:var(--text-muted)]">
-                    {idx + 1}
-                  </td>
+              {sorted.map((n: Notice, idx: number) => {
+                const url = normalizeUrl(n.fileUrl);
 
-                  <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
-                    {formatDateShort(n.date)}
-                  </td>
+                return (
+                  <tr key={n.id} className="hover:bg-[color:var(--bg-main)]">
+                    <td className="p-2 text-center text-[color:var(--text-muted)]">{idx + 1}</td>
 
-                  <td className="p-2 text-[color:var(--text-main)]">{n.title}</td>
+                    <td className="p-2 whitespace-nowrap text-[color:var(--text-muted)]">
+                      {formatDateShort(n.date)}
+                    </td>
 
-                  <td className="p-2 text-center">
-                    {n.fileUrl ? (
-                      <a
-                        href={n.fileUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="inline-flex items-center justify-center rounded bg-red-600 px-2 py-1 text-[11px] font-bold text-white hover:bg-red-700"
-                      >
-                        {c("pdf")}
-                      </a>
-                    ) : (
-                      <span className="text-xs text-[color:var(--text-muted)]">
-                        {c("na")}
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    {/* title opens */}
+                    <td className="p-2 text-[color:var(--text-main)]">
+                      {url ? <TitleLink title={n.title} url={url} /> : n.title}
+                    </td>
+
+                    {/* red button downloads */}
+                    <td className="p-2 text-center">
+                      {url ? (
+                        <DownloadPdfButton url={url} label={c("downloadPdf")} />
+                      ) : (
+                        <span className="text-xs text-[color:var(--text-muted)]">{c("na")}</span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
 
               {sorted.length === 0 && (
                 <tr>

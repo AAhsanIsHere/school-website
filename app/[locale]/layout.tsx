@@ -19,6 +19,7 @@ export default async function LocaleLayout({
   params: Promise<{ locale: string }> | { locale: string };
 }) {
   const { locale } = await Promise.resolve(params);
+
   if (!routing.locales.includes(locale as any)) notFound();
 
   setRequestLocale(locale);
@@ -28,12 +29,13 @@ export default async function LocaleLayout({
     <html lang={locale} suppressHydrationWarning>
       <body className="min-h-screen bg-[var(--bg-main)] text-[var(--text-main)]">
         <NextIntlClientProvider locale={locale} messages={messages}>
-          <div className="mx-auto w-full max-w-5xl min-h-screen flex flex-col bg-[var(--bg-card)] shadow-md">
+          {/* Full width wrapper */}
+          <div className="w-full min-h-screen flex flex-col bg-[var(--bg-card)] shadow-[var(--shadow-card)]">
             <TopBar />
             <SiteHeader />
             <Navbar />
 
-            <div className="flex-1">{children}</div>
+            <main className="flex-1">{children}</main>
 
             <Footer />
           </div>

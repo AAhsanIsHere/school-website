@@ -7,11 +7,11 @@ export default function PrincipalCard() {
   const t = useTranslations("home");
 
   return (
-    <div className="rounded-xl bg-[var(--bg-card)] p-4 shadow-sm border border-[var(--border)]">
+    <div className="rounded-xl bg-[color:var(--bg-card)] p-4 shadow-[var(--shadow-card)]">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-2">
           <span className="h-4 w-[3px] bg-sky-600" />
-          <h2 className="text-lg font-semibold text-[var(--text-main)]">
+          <h2 className="text-lg font-semibold text-[color:var(--text-main)]">
             {t("principalTitle")}
           </h2>
         </div>
@@ -25,11 +25,11 @@ export default function PrincipalCard() {
       </div>
 
       {/* image/placeholder box */}
-      <div className="mt-3 overflow-hidden rounded-lg bg-[var(--bg-main)] border border-[var(--border)]">
+      <div className="mt-3 overflow-hidden rounded-lg bg-[color:var(--bg-main)]">
         <div className="h-44 w-full opacity-90" />
       </div>
 
-      <p className="mt-3 text-sm leading-relaxed text-[var(--text-muted)]">
+      <p className="mt-3 text-sm leading-relaxed text-[color:var(--text-muted)]">
         {t("principalMessage")}
       </p>
     </div>

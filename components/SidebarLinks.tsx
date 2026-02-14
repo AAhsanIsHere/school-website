@@ -11,7 +11,7 @@ export default function SidebarLinks() {
   ] as const;
 
   return (
-    <div className="overflow-hidden rounded-xl bg-[color:var(--bg-card)] text-[color:var(--text-main)] shadow-sm ring-1 ring-black/5">
+    <div className="overflow-hidden rounded-xl bg-[color:var(--bg-card)] text-[color:var(--text-main)] shadow-[var(--shadow-card)]">
       <div className="bg-red-600 px-4 py-2 text-white font-semibold">
         {t("title")}
       </div>
@@ -21,7 +21,7 @@ export default function SidebarLinks() {
           <li key={it.key}>
             <a
               href={it.href}
-              className="block px-4 py-2 text-[color:var(--text-main)] hover:bg-[color:var(--border)]/40 hover:text-sky-600 transition-colors"
+              className="block px-4 py-2 text-[color:var(--text-main)] hover:bg-[color:var(--bg-main)] hover:text-sky-600 transition-colors"
             >
               {t(`items.${it.key}`)}
             </a>
